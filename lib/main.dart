@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'round_button.dart';
+import 'rect_button.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,37 +15,44 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'DM Assistant',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(
             seedColor: const Color.fromARGB(255, 13, 0, 133),
-            brightness: Brightness.dark,
-            background: const Color.fromARGB(255, 3, 0, 19),
-            outline: const Color.fromARGB(255, 47, 80, 255)), //030013
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color.fromARGB(255, 3, 0, 19),
-        ),
+            brightness: Brightness.dark),
+        //background: const Color.fromARGB(255, 3, 0, 19),
+        //outline: const Color.fromARGB(255, 47, 80, 255), //030013
+        //primaryContainer: const Color.fromARGB(255, 24, 6, 114)),
+        // appBarTheme: const AppBarTheme(
+        //   backgroundColor: Color.fromARGB(255, 3, 0, 19),
+        // ),
         // bottomAppBarTheme:
         //     const BottomAppBarTheme(color: Color.fromARGB(255, 3, 0, 19)),
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-            backgroundColor: Color.fromARGB(255, 3, 0, 19)),
+        // bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        //     backgroundColor: Color.fromARGB(255, 3, 0, 19)),
         useMaterial3: true,
-        //brightness: Brightness.dark,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.scrim,
+            bottom: const TabBar(
+              tabs: [
+                Tab(icon: Icon(Icons.directions_car)),
+                Tab(icon: Icon(Icons.directions_transit)),
+                Tab(icon: Icon(Icons.directions_bike)),
+              ],
+            ),
+          ),
+          body: const TabBarView(
+            children: [
+              MyHomePage(title: 'Flutter Demo Home Page'),
+              Icon(Icons.directions_transit),
+              Icon(Icons.directions_bike),
+            ],
+          ),
+        ),
+      ),
+      //home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -88,69 +97,183 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return Scaffold(
-      // appBar: AppBar(
-      //   bottom: PreferredSize(
-      //     preferredSize: const Size.fromHeight(2.0),
-      //     child: Container(
-      //       color: Theme.of(context).colorScheme.outline,
-      //       height: 2.0,
-      //     ),
-      //   ),
-      // ),
-      bottomNavigationBar: BottomAppBar(
-        padding: EdgeInsets.zero,
-        //color: Theme.of(context).colorScheme.background,
-        child: Container(
-            height: 50.0,
-            //color: Theme.of(context).colorScheme.background,
-            decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.background,
-                border: Border(
-                    top: BorderSide(
-                        width: 1,
-                        color: Theme.of(context).colorScheme.outline))),
-            //padding: EdgeInsets.zero,
-            //margin: EdgeInsets.zero,
-
-            child: const Center(child: Text('Hello DM Assitant!'))),
-
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        //title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+    return Container(
+      color: Theme.of(context).colorScheme.scrim,
+      child: Column(children: [
+        Expanded(
+          child: Column(
+            // Column is also a layout widget. It takes a list of children and
+            // arranges them vertically. By default, it sizes itself to fit its
+            // children horizontally, and tries to be as tall as its parent.
+            //
+            // Column has various properties to control how it sizes itself and
+            // how it positions its children. Here we use mainAxisAlignment to
+            // center the children vertically; the main axis here is the vertical
+            // axis because Columns are vertical (the cross axis would be
+            // horizontal).
+            //
+            // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
+            // action in the IDE, or press "p" in the console), to see the
+            // wireframe for each widget.
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Text(
+                'You have pushed the button this many times:',
+              ),
+              Text(
+                '$_counter',
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+            ],
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+        Container(
+          decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.scrim,
+              border: Border(
+                  top: BorderSide(
+                      width: 2,
+                      color: Theme.of(context).colorScheme.onPrimary))),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              RectButton(
+                onPressed: () {},
+                primary: false,
+                height: 60,
+                width: 85,
+                icon: const Icon(
+                  Icons.import_export,
+                  color: Colors.white,
+                  size: 36,
+                  semanticLabel: 'Riordina in base all\'iniziativa',
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(25.0),
+                child: RoundButton(
+                  onPressed: () {},
+                  primary: true,
+                  radius: 110,
+                  icon: const Icon(
+                    Icons.double_arrow,
+                    color: Colors.white,
+                    size: 54,
+                    semanticLabel: 'Avanza al prossimo round',
+                  ),
+                ),
+              ),
+              RectButton(
+                onPressed: () {},
+                height: 60,
+                width: 85,
+                primary: false,
+                icon: const Icon(
+                  Icons.crop_square,
+                  color: Colors.white,
+                  size: 36,
+                  semanticLabel: 'Esci dal combattimento',
+                ),
+              )
+            ],
+          ),
+        ),
+      ]),
     );
+
+    // return Scaffold(
+    //   backgroundColor: Theme.of(context).colorScheme.scrim,
+    //   bottomNavigationBar: BottomAppBar(
+    //     padding: EdgeInsets.zero,
+    //     height: 162,
+    //     child: Container(
+    //       decoration: BoxDecoration(
+    //           color: Theme.of(context).colorScheme.scrim,
+    //           border: Border(
+    //               top: BorderSide(
+    //                   width: 1,
+    //                   color: Theme.of(context).colorScheme.onPrimary))),
+    //       child: Row(
+    //         mainAxisAlignment: MainAxisAlignment.center,
+    //         children: [
+    //           RectButton(
+    //             onPressed: () {},
+    //             primary: false,
+    //             height: 60,
+    //             width: 85,
+    //             icon: const Icon(
+    //               Icons.import_export,
+    //               color: Colors.white,
+    //               size: 36,
+    //               semanticLabel: 'Riordina in base all\'iniziativa',
+    //             ),
+    //           ),
+    //           Padding(
+    //             padding: const EdgeInsets.all(25.0),
+    //             child: RoundButton(
+    //               onPressed: () {},
+    //               primary: true,
+    //               radius: 110,
+    //               icon: const Icon(
+    //                 Icons.double_arrow,
+    //                 color: Colors.white,
+    //                 size: 54,
+    //                 semanticLabel: 'Avanza al prossimo round',
+    //               ),
+    //             ),
+    //           ),
+    //           RectButton(
+    //             onPressed: () {},
+    //             height: 60,
+    //             width: 85,
+    //             primary: false,
+    //             icon: const Icon(
+    //               Icons.crop_square,
+    //               color: Colors.white,
+    //               size: 36,
+    //               semanticLabel: 'Esci dal combattimento',
+    //             ),
+    //           )
+    //         ],
+    //       ),
+    //     ),
+
+    //     // Here we take the value from the MyHomePage object that was created by
+    //     // the App.build method, and use it to set our appbar title.
+    //     //title: Text(widget.title),
+    //   ),
+    //   body: Center(
+    //     child: Column(
+    //       // Column is also a layout widget. It takes a list of children and
+    //       // arranges them vertically. By default, it sizes itself to fit its
+    //       // children horizontally, and tries to be as tall as its parent.
+    //       //
+    //       // Column has various properties to control how it sizes itself and
+    //       // how it positions its children. Here we use mainAxisAlignment to
+    //       // center the children vertically; the main axis here is the vertical
+    //       // axis because Columns are vertical (the cross axis would be
+    //       // horizontal).
+    //       //
+    //       // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
+    //       // action in the IDE, or press "p" in the console), to see the
+    //       // wireframe for each widget.
+    //       mainAxisAlignment: MainAxisAlignment.center,
+    //       children: <Widget>[
+    //         const Text(
+    //           'You have pushed the button this many times:',
+    //         ),
+    //         Text(
+    //           '$_counter',
+    //           style: Theme.of(context).textTheme.headlineMedium,
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    //   floatingActionButton: FloatingActionButton(
+    //     onPressed: _incrementCounter,
+    //     tooltip: 'Increment',
+    //     child: const Icon(Icons.add),
+    //   ), // This trailing comma makes auto-formatting nicer for build methods.
+    // );
   }
 }

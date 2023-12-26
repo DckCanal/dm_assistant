@@ -1,16 +1,27 @@
 import 'status.dart';
+import 'dart:math';
 
 class Character {
   int initiativeBonus;
-  int? initiativeRoll; // può essere null
+  int? initiativeScore; // può essere null
   String name;
   List<Status> status = []; // inizializzato come un array vuoto
   bool active = true; // inizializzato come true
+  bool enabled = true;
 
-  Character({
-    required this.initiativeBonus,
-    this.initiativeRoll, // può essere null
-    required this.name,
-    // status e active hanno già valori iniziali, quindi non sono richiesti nel costruttore
-  });
+  Character(this.initiativeBonus, this.name, [this.initiativeScore]) {
+    initiativeScore ??= initiativeBonus + Random().nextInt(20) + 1;
+  }
+
+  void rollInitiative() {
+    initiativeScore = initiativeBonus + Random().nextInt(20) + 1;
+  }
+
+  void enable() {
+    enabled = true;
+  }
+
+  void disable() {
+    enabled = false;
+  }
 }

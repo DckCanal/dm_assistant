@@ -6,11 +6,12 @@ class RoundButton extends StatelessWidget {
   final Icon icon;
   final double radius;
 
-  RoundButton(
+  const RoundButton(
       {this.onPressed,
       required this.primary,
       required this.icon,
-      this.radius = 48.0});
+      this.radius = 48.0,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +28,7 @@ class RoundButton extends StatelessWidget {
               }
               return primary
                   ? Theme.of(context).colorScheme.onPrimary
-                  : Theme.of(context)
-                      .colorScheme
-                      .scrim; // Colore in base al parametro 'primary'
+                  : Colors.black; // Colore in base al parametro 'primary'
             },
           ),
           //   shape: MaterialStateProperty.all<CircleBorder>(

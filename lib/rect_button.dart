@@ -8,13 +8,14 @@ class RectButton extends StatelessWidget {
   final double width;
   final double borderRadius;
 
-  RectButton(
+  const RectButton(
       {this.onPressed,
       required this.primary,
       required this.icon,
       this.height = 48.0,
       this.width = 48.0,
-      this.borderRadius = 10.0});
+      this.borderRadius = 10.0,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +34,7 @@ class RectButton extends StatelessWidget {
               }
               return primary
                   ? Theme.of(context).colorScheme.onPrimary
-                  : Theme.of(context)
-                      .colorScheme
-                      .scrim; // Colore in base al parametro 'primary'
+                  : Colors.black; // Colore in base al parametro 'primary'
             },
           ),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(

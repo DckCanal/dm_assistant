@@ -3,6 +3,7 @@ import 'character.dart';
 import 'data.dart';
 import 'campaign_title_dialog.dart';
 import 'initiative_tracker.dart';
+import 'dice_roller.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 void main() {
@@ -246,7 +247,7 @@ class _MyAppState extends State<MyApp> {
                   onEndCombat: _endCombat,
                   onRerollInitiative: _rerollInitiative,
                 ),
-                Icon(Icons.directions_transit),
+                DiceRoller(),
                 Icon(Icons.directions_bike),
               ],
             ),

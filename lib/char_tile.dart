@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'character.dart';
 import 'rect_button.dart';
+import 'initiative_dialog.dart';
 
 class CharTile extends StatelessWidget {
   final Character character;
   final VoidCallback onDelete, onEnable, onDisable;
+  final void Function(int) onSetInitiativeScore;
   final bool roundOwner;
 
   const CharTile(
@@ -12,6 +14,7 @@ class CharTile extends StatelessWidget {
       required this.onDelete,
       required this.onEnable,
       required this.onDisable,
+      required this.onSetInitiativeScore,
       this.roundOwner = false,
       super.key});
 
@@ -29,40 +32,73 @@ class CharTile extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
               border: Border.all(
-                  color: Theme.of(context).colorScheme.inversePrimary,
+                  color: character.enabled
+                      ? Theme.of(context).colorScheme.inversePrimary
+                      : Theme.of(context).colorScheme.onInverseSurface,
                   width: 2),
               borderRadius: BorderRadius.circular(10)),
-          child: ListTile(
-            leading: Text(
-              character.initiativeScore.toString(),
-              style:
-                  DefaultTextStyle.of(context).style.apply(fontSizeFactor: 2.0),
-            ),
-            title: Text(character.name),
-            trailing: SizedBox(
-              width: 140,
-              //height: 100,
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    RectButton(
-                      primary: false,
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  OutlinedButton(
+                    onPressed: () async {
+                      final result = await showDialog<int>(
+                        context: context,
+                        builder: (context) {
+                          int initiativeScore = character.initiativeScore ?? 0;
+                          // final FocusNode unitCodeCtrlFocusNode = FocusNode();
+                          // unitCodeCtrlFocusNode.requestFocus();
+                          return InitiativeDialog(
+                              initiativeScore: initiativeScore);
+                        },
+                      );
+                      if (result != null) {
+                        onSetInitiativeScore(result);
+                      }
+                    },
+                    child: SizedBox(
                       height: 60,
-                      width: 60,
-                      onPressed: onDelete,
-                      icon: const Icon(
-                        Icons.delete,
-                        size: 20,
+                      width: 50,
+                      child: Center(
+                        child: Text(
+                          character.initiativeScore.toString(),
+                          style: const TextStyle(fontSize: 28),
+                        ),
                       ),
                     ),
-                    RectButton(
+                  ),
+                  const SizedBox(width: 20),
+                  Text(character.name),
+                ],
+              ),
+              SizedBox(
+                width: 140,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      RectButton(
                         primary: false,
-                        onPressed: character.enabled ? onDisable : onEnable,
                         height: 60,
                         width: 60,
-                        icon: const Icon(Icons.no_accounts))
-                  ]),
-            ),
+                        onPressed: onDelete,
+                        icon: const Icon(
+                          Icons.delete,
+                          size: 20,
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      RectButton(
+                          primary: false,
+                          onPressed: character.enabled ? onDisable : onEnable,
+                          height: 60,
+                          width: 60,
+                          icon: const Icon(Icons.no_accounts))
+                    ]),
+              ),
+            ],
           ),
         ),
       ),

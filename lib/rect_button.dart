@@ -3,18 +3,20 @@ import 'package:flutter/material.dart';
 class RectButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool primary;
-  final Icon icon;
+  final Icon? icon;
   final double height;
   final double width;
   final double borderRadius;
+  final Widget? child;
 
   const RectButton(
       {this.onPressed,
       required this.primary,
-      required this.icon,
+      this.icon,
       this.height = 48.0,
       this.width = 48.0,
       this.borderRadius = 10.0,
+      this.child,
       super.key});
 
   @override
@@ -54,7 +56,7 @@ class RectButton extends StatelessWidget {
             ),
           ),
         ),
-        child: Center(child: icon), // Icona centrata
+        child: child ?? Center(child: icon), // Icona centrata
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:dm_assistant/dice.dart';
 import 'package:dm_assistant/rect_button.dart';
+import 'package:dm_assistant/round_button.dart';
 import 'package:flutter/material.dart';
 import 'data.dart';
 
@@ -8,10 +9,8 @@ class DiceRoller extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.black,
-      //child: Text('Hi!'),
-      child: Row(
+      child: const Row(
         children: [
-          //Text('Hi!'), Text('Hello!')
           SavedRollList(),
           Expanded(
             child: Column(children: [
@@ -34,7 +33,7 @@ class DicePanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(12),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
           color: Colors.black,
           border: Border(
@@ -128,53 +127,64 @@ class _CustomRollPanelState extends State<CustomRollPanel> {
   }
 }
 
-class RollHistory extends StatelessWidget {
+class RollHistory extends StatefulWidget {
   const RollHistory({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
-    List<RollResult> rolls = getRolls();
+  State<RollHistory> createState() => _RollHistoryState();
+}
 
+class _RollHistoryState extends State<RollHistory> {
+  final ScrollController _controller = ScrollController();
+  List<RollResult> rolls = getRolls();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.animateTo(_controller.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
+    });
+  }
+
+  void _scrollDown() {
+    _controller.animateTo(
+      _controller.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.fastOutSlowIn,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Expanded(
       child: Center(
         child: SizedBox(
           width: 600,
-          child: ListView.builder(
-            //key: const PageStorageKey('InitiativeTrackerListView'),
+          child: ListView.separated(
             itemCount: rolls.length,
-
-            //controller: scrollController,
+            key: const PageStorageKey('RollHistoryListView'),
+            controller: _controller,
+            separatorBuilder: (BuildContext context, int index) {
+              return const SizedBox(height: 6);
+            },
             itemBuilder: (context, index) {
-              return SizedBox(
-                  height: 80, child: Card(child: RollTile(roll: rolls[index])));
+              return Container(
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    border: Border.all(
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                        width: 2),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: RollTile(roll: rolls[index]));
             },
           ),
         ),
       ),
-    );
-  }
-}
-
-class SavedRollList extends StatelessWidget {
-  const SavedRollList({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    //return ListView();
-    return Container(
-      width: 500,
-      decoration: BoxDecoration(
-        color: Colors.black,
-        border: Border(
-          right: BorderSide(
-              width: 2, color: Theme.of(context).colorScheme.onPrimary),
-        ),
-      ),
-      child: Center(child: Text('Tiri salvati')),
     );
   }
 }
@@ -189,17 +199,58 @@ class RollTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget leading = Text(
+      roll.result.toString(),
+      style: Theme.of(context).textTheme.titleLarge,
+    );
+    Widget title = Text(roll.title);
+    Widget trailing = RoundButton(
+        radius: 40,
+        primary: false,
+        icon: const Icon(Icons.refresh, size: 24),
+        onPressed: () {});
     if (roll.formula != null) {
-      return ListTile(
-        leading: Text(roll.result.toString()),
-        title: Text(roll.title),
-        subtitle: Text(roll.formula ?? ''),
+      return Center(
+        child: ListTile(
+          horizontalTitleGap: 40,
+          dense: true,
+          leading: leading,
+          title: title,
+          subtitle: Text(roll.formula ?? ''),
+          trailing: trailing,
+        ),
       );
     } else {
-      return ListTile(
-        leading: Text(roll.result.toString()),
-        title: Text(roll.title),
+      return Center(
+        child: ListTile(
+          horizontalTitleGap: 40,
+          dense: true,
+          leading: leading,
+          title: title,
+          trailing: trailing,
+        ),
       );
     }
+  }
+}
+
+class SavedRollList extends StatelessWidget {
+  const SavedRollList({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 500,
+      decoration: BoxDecoration(
+        color: Colors.black,
+        border: Border(
+          right: BorderSide(
+              width: 2, color: Theme.of(context).colorScheme.onPrimary),
+        ),
+      ),
+      child: const Center(child: Text('Tiri salvati')),
+    );
   }
 }

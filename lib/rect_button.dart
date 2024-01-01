@@ -50,8 +50,8 @@ class RectButton extends StatelessWidget {
                     : Theme.of(context).colorScheme.onInverseSurface,
 
                 width: primary && onPressed != null
-                    ? 3.0
-                    : 2.0, // Larghezza del bordo in base al parametro 'primary'
+                    ? 2.0
+                    : 1.0, // Larghezza del bordo in base al parametro 'primary'
               ),
             ),
           ),

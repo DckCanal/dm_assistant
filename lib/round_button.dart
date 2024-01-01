@@ -21,6 +21,7 @@ class RoundButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ButtonStyle(
+          padding: MaterialStateProperty.all(EdgeInsets.zero),
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
               if (states.contains(MaterialState.disabled)) {
@@ -31,39 +32,19 @@ class RoundButton extends StatelessWidget {
                   : Colors.black; // Colore in base al parametro 'primary'
             },
           ),
-          //   shape: MaterialStateProperty.all<CircleBorder>(
-          //     // Forma rotonda
-          //     CircleBorder(
-          //       side: BorderSide(
-          //         color: Theme.of(context).colorScheme.outline,
-          //         width: primary
-          //             ? 3.0
-          //             : 2.0, // Larghezza del bordo in base al parametro 'primary'
-          //       ),
-          //     ),
-          //   ),
-          // ),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            // Forma rotonda
             RoundedRectangleBorder(
-              borderRadius:
-                  BorderRadius.circular(radius), // Raggio del bordo arrotondato
+              borderRadius: BorderRadius.circular(radius),
               side: BorderSide(
                 color: onPressed != null
                     ? Theme.of(context).colorScheme.inversePrimary
                     : Theme.of(context).colorScheme.onInverseSurface,
-                width: primary && onPressed != null
-                    ? 3.0
-                    : 2.0, // Larghezza del bordo in base al parametro 'primary'
+                width: primary && onPressed != null ? 2.0 : 1.0,
               ),
             ),
           ),
         ),
-        // child: SizedBox(
-        //   width: radius * sqrt(2), // Larghezza basata sul raggio
-        //   height: radius * sqrt(2), // Altezza basata sul raggio
-        child: Center(child: icon), // Icona centrata
-        //), // Icona del pulsante
+        child: Center(child: icon),
       ),
     );
   }

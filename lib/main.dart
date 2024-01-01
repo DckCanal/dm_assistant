@@ -10,8 +10,6 @@ void main() {
   runApp(MyApp());
 }
 
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
@@ -25,8 +23,8 @@ class _MyAppState extends State<MyApp> {
   final Color defaultColor = const Color.fromARGB(255, 13, 0, 133);
   Color? userColor;
   String campaignTitle = 'Nuova campagna';
-  String? saveFilePath;
-  bool isModified = false;
+  // String? saveFilePath;
+  // bool isModified = false;
 
   // Future<void> saveState() async {
   //   if (saveFilePath == null) {
@@ -121,7 +119,7 @@ class _MyAppState extends State<MyApp> {
           } else {
             _scrollController.animateTo(
               currentTurn *
-                  104, // Sostituisci con l'altezza del tuo widget CharTile.
+                  114, // Sostituisci con l'altezza del tuo widget CharTile.
               duration: const Duration(milliseconds: 500),
               curve: Curves.easeInOut,
             );
@@ -199,7 +197,7 @@ class _MyAppState extends State<MyApp> {
                         return AlertDialog(
                           title: const Text('Scegli un colore'),
                           content: SingleChildScrollView(
-                            child: MaterialPicker(
+                            child: ColorPicker(
                               pickerColor: userColor ?? defaultColor,
                               onColorChanged: _changeColor,
                             ),
@@ -209,18 +207,14 @@ class _MyAppState extends State<MyApp> {
                     );
                   },
                 ),
-                IconButton(
-                  icon: Icon(Icons.save),
-                  onPressed: () {
-                    // Aggiungi il tuo codice qui per salvare un file.
-                  },
-                ),
-                IconButton(
-                  icon: Icon(Icons.folder_open),
-                  onPressed: () {
-                    // Aggiungi il tuo codice qui per aprire un file.
-                  },
-                ),
+                // IconButton(
+                //   icon: const Icon(Icons.save),
+                //   onPressed: () {},
+                // ),
+                // IconButton(
+                //   icon: const Icon(Icons.folder_open),
+                //   onPressed: () {},
+                // ),
               ],
               bottom: const TabBar(
                 tabs: [

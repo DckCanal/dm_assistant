@@ -45,10 +45,13 @@ class InitiativeTracker extends StatelessWidget {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(12.0),
-            child: ListView.builder(
+            child: ListView.separated(
               key: const PageStorageKey('InitiativeTrackerListView'),
               itemCount: characters.length,
               controller: scrollController,
+              separatorBuilder: (BuildContext context, int index) {
+                return const SizedBox(height: 10);
+              },
               itemBuilder: (context, index) {
                 return CharTile(
                   character: characters[index],

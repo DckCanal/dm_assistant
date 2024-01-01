@@ -20,23 +20,46 @@ class CharTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      surfaceTintColor: Colors.transparent,
-      color: !character.enabled
-          ? Theme.of(context).colorScheme.surface
-          : (roundOwner == true
-              ? Theme.of(context).colorScheme.onPrimary
-              : Colors.black),
+    return AnimatedContainer(
+      //surfaceTintColor: Colors.transparent,
+      duration: const Duration(milliseconds: 200),
+      decoration: BoxDecoration(
+        color: !character.enabled
+            ? Theme.of(context).colorScheme.surface
+            : (roundOwner == true
+                ? Theme.of(context).colorScheme.onPrimary
+                : Colors.black),
+        border: Border.all(
+            color: character.enabled
+                ? Theme.of(context).colorScheme.inversePrimary
+                : Theme.of(context).colorScheme.onInverseSurface,
+            width: 2),
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: roundOwner
+            ? [
+                BoxShadow(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .inversePrimary
+                      .withOpacity(0.2),
+                  spreadRadius: 3,
+                  blurRadius: 4,
+                  offset: const Offset(2, 3),
+                ),
+              ]
+            : null,
+      ),
+
       child: SizedBox(
         height: 100,
         child: Container(
-          decoration: BoxDecoration(
-              border: Border.all(
-                  color: character.enabled
-                      ? Theme.of(context).colorScheme.inversePrimary
-                      : Theme.of(context).colorScheme.onInverseSurface,
-                  width: 2),
-              borderRadius: BorderRadius.circular(10)),
+          // decoration: BoxDecoration(
+          //     border: Border.all(
+          //         color: character.enabled
+          //             ? Theme.of(context).colorScheme.inversePrimary
+          //             : Theme.of(context).colorScheme.onInverseSurface,
+          //         width: 2),
+          //     borderRadius: BorderRadius.circular(10)),
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

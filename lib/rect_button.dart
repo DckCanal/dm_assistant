@@ -27,6 +27,7 @@ class RectButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ButtonStyle(
+          padding: MaterialStateProperty.all(EdgeInsets.zero),
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
               if (states.contains(MaterialState.disabled)) {

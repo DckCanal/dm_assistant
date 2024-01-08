@@ -61,6 +61,9 @@ class AppState extends ChangeNotifier {
 
   void setCharacterInitiativeScore(Character character, int initiativeScore) {
     character.initiativeScore = initiativeScore;
+    if (inCombat) {
+      _sortCharacters();
+    }
     notifyListeners();
   }
 
@@ -92,8 +95,7 @@ class AppState extends ChangeNotifier {
           nextTurnOrStartCombat();
         } else {
           scrollController.animateTo(
-            currentTurn *
-                114, // Sostituisci con l'altezza del tuo widget CharTile.
+            currentTurn * 114,
             duration: const Duration(milliseconds: 500),
             curve: Curves.easeInOut,
           );
@@ -118,7 +120,9 @@ class AppState extends ChangeNotifier {
     for (Character character in characters) {
       character.rollInitiative();
     }
-    _sortCharacters();
+    if (inCombat) {
+      _sortCharacters();
+    }
     notifyListeners();
   }
 

@@ -1,4 +1,5 @@
 import 'package:dm_assistant/app_state.dart';
+import 'package:dm_assistant/character_view.dart';
 import 'package:dm_assistant/dice_roller.dart';
 import 'package:dm_assistant/initiative_tracker.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class HomePage extends StatelessWidget {
     var appState = context.watch<AppState>();
     return Builder(builder: (context) {
       return DefaultTabController(
-        length: 2,
+        length: 3,
         child: Scaffold(
           appBar: AppBar(
             title: TextButton(
@@ -56,15 +57,15 @@ class HomePage extends StatelessWidget {
             ],
             bottom: const TabBar(
               tabs: [
-                Tab(
-                    icon:
-                        Icon(Icons.flash_on_outlined)), //Icons.directions_car,
-                Tab(icon: Icon(Icons.gamepad)), // Icons.directions_transit
+                Tab(icon: Icon(Icons.people)),
+                Tab(icon: Icon(Icons.flash_on_outlined)),
+                Tab(icon: Icon(Icons.gamepad)),
               ],
             ),
           ),
           body: TabBarView(
             children: [
+              const CharacterView(),
               const InitiativeTracker(),
               DiceRoller(),
             ],
@@ -78,7 +79,7 @@ class HomePage extends StatelessWidget {
 class CampaignTitleDialog extends StatefulWidget {
   final String oldTitle;
 
-  CampaignTitleDialog({required this.oldTitle});
+  CampaignTitleDialog({required this.oldTitle, super.key});
   @override
   _CampaignTitleDialogState createState() => _CampaignTitleDialogState();
 }

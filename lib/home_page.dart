@@ -16,6 +16,7 @@ class HomePage extends StatelessWidget {
     return Builder(builder: (context) {
       return DefaultTabController(
         length: 3,
+        initialIndex: 1,
         child: Scaffold(
           appBar: AppBar(
             title: TextButton(

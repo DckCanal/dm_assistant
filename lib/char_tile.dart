@@ -54,69 +54,63 @@ class CharTile extends StatelessWidget {
           height: 100,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    OutlinedButton(
-                      onPressed: () async {
-                        final result = await showDialog<int>(
-                          context: context,
-                          builder: (context) {
-                            int initiativeScore =
-                                character.initiativeScore ?? 0;
-                            // final FocusNode unitCodeCtrlFocusNode = FocusNode();
-                            // unitCodeCtrlFocusNode.requestFocus();
-                            return InitiativeDialog(
-                                initiativeScore: initiativeScore);
-                          },
-                        );
-                        if (result != null) {
-                          onSetInitiativeScore(result);
-                        }
-                      },
-                      child: SizedBox(
-                        height: 60,
-                        width: 50,
-                        child: Center(
-                          child: Text(
-                            character.initiativeScore.toString(),
-                            style: const TextStyle(fontSize: 28),
-                          ),
-                        ),
-                      ),
+            child: Row(children: [
+              OutlinedButton(
+                onPressed: () async {
+                  final result = await showDialog<int>(
+                    context: context,
+                    builder: (context) {
+                      int initiativeScore = character.initiativeScore ?? 0;
+                      // final FocusNode unitCodeCtrlFocusNode = FocusNode();
+                      // unitCodeCtrlFocusNode.requestFocus();
+                      return InitiativeDialog(initiativeScore: initiativeScore);
+                    },
+                  );
+                  if (result != null) {
+                    onSetInitiativeScore(result);
+                  }
+                },
+                child: SizedBox(
+                  height: 60,
+                  width: 50,
+                  child: Center(
+                    child: Text(
+                      character.initiativeScore.toString(),
+                      style: const TextStyle(fontSize: 28),
                     ),
-                    const SizedBox(width: 20),
-                    Text(character.name, overflow: TextOverflow.ellipsis),
-                  ],
+                  ),
                 ),
-                SizedBox(
-                  width: 140,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        RectButton(
-                          primary: false,
-                          height: 60,
-                          width: 60,
-                          onPressed: onDelete,
-                          icon: const Icon(
-                            Icons.delete,
-                            size: 20,
-                          ),
-                        ),
-                        const SizedBox(width: 20),
-                        RectButton(
-                            primary: false,
-                            onPressed: character.enabled ? onDisable : onEnable,
-                            height: 60,
-                            width: 60,
-                            icon: const Icon(Icons.no_accounts))
-                      ]),
+              ),
+              const SizedBox(width: 20),
+              Expanded(
+                  child: Text(character.name, overflow: TextOverflow.ellipsis)),
+              RectButton(
+                primary: false,
+                height: 60,
+                width: 60,
+                onPressed: onDelete,
+                icon: const Icon(
+                  Icons.delete,
+                  size: 20,
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(width: 20),
+              RectButton(
+                  primary: false,
+                  onPressed: character.enabled ? onDisable : onEnable,
+                  height: 60,
+                  width: 60,
+                  icon: const Icon(Icons.no_accounts))
+            ]),
+            //     SizedBox(
+            //       width: 140,
+            //       child: Row(
+            //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //           children: [
+
+            //     ),
+            //   ],
+            // ),
           ),
         ),
       );

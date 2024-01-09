@@ -44,7 +44,7 @@ class HomePage extends StatelessWidget {
                       return AlertDialog(
                         title: const Text('Scegli un colore'),
                         content: SingleChildScrollView(
-                          child: ColorPicker(
+                          child: BlockPicker(
                             pickerColor:
                                 appState.userColor ?? appState.defaultColor,
                             onColorChanged: appState.changeColor,

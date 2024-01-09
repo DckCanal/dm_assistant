@@ -10,6 +10,12 @@ class AppState extends ChangeNotifier {
   final Color defaultColor = const Color.fromARGB(255, 13, 0, 133);
   Color? userColor;
   String campaignTitle = 'Nuova campagna';
+  bool showDisabledChar = false;
+
+  void setDisabledChar(bool newValue) {
+    showDisabledChar = newValue;
+    notifyListeners();
+  }
 
   void setCampaignTitle(String newTitle) {
     campaignTitle = newTitle;

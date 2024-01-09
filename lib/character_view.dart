@@ -65,19 +65,6 @@ class _CharacterViewState extends State<CharacterView> {
                 itemBuilder: (context, index) {
                   return CharTile(
                     character: characters[index],
-                    onDelete: () {
-                      appState.removeCharacter(characters[index]);
-                    },
-                    onEnable: () {
-                      appState.enableCharacter(characters[index]);
-                    },
-                    onDisable: () {
-                      appState.disableCharacter(characters[index]);
-                    },
-                    onSetInitiativeScore: (int initiativeScore) {
-                      appState.setCharacterInitiativeScore(
-                          characters[index], initiativeScore);
-                    },
                     roundOwner:
                         index == appState.currentTurn && appState.inCombat,
                   );

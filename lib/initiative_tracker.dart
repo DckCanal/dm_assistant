@@ -10,22 +10,25 @@ class InitiativeTracker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<AppState>();
     return Container(
       color: Colors.black,
       child: Column(children: [
-        Expanded(
-          child: LayoutBuilder(builder: (context, constraints) {
-            return const Row(
-              children: [
-                // constraints.maxWidth >= 800
-                //     ? const DisabledCharacterList()
-                //     : const DisabledCharacterDrawer(),
-                Expanded(
-                  child: ActiveCharacterList(),
-                ),
-              ],
-            );
-          }),
+        // const SizedBox(height: 20),
+        // Text(appState.inCombat ? 'In combattimento' : 'Fuori combattimento'),
+        const SizedBox(height: 20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Personaggi non attivi'),
+            const SizedBox(width: 20),
+            Switch(
+                value: appState.showDisabledChar,
+                onChanged: appState.setDisabledChar),
+          ],
+        ),
+        const Expanded(
+          child: CharacterList(),
         ),
         const InitiativeTrackerControlBar(),
       ]),
@@ -111,49 +114,50 @@ class InitiativeTracker extends StatelessWidget {
 //   }
 // }
 
-class ActiveCharacterList extends StatelessWidget {
-  const ActiveCharacterList({super.key});
+class CharacterList extends StatelessWidget {
+  const CharacterList({super.key});
 
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
-    List<Character> characters =
-        appState.characters.where((char) => char.enabled).toList();
+    List<Character> characters = appState.characters
+        .where((char) => appState.showDisabledChar ? true : char.enabled)
+        .toList();
+
     return LayoutBuilder(builder: (context, constraints) {
-      return Padding(
+      return Container(
         padding: const EdgeInsets.all(12.0),
+        constraints: const BoxConstraints(maxWidth: 800),
         child: ListView.separated(
-          key: const PageStorageKey('InitiativeTrackerListView'),
-          itemCount: characters.length,
-          controller: appState.scrollController,
-          separatorBuilder: (BuildContext context, int index) {
-            return constraints.maxWidth > 600
-                ? const SizedBox(height: 10)
-                : Divider(
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                    height: 14,
-                  );
-          },
-          itemBuilder: (context, index) {
-            return CharTile(
-              character: characters[index],
-              onDelete: () {
-                appState.removeCharacter(characters[index]);
-              },
-              onEnable: () {
-                appState.enableCharacter(characters[index]);
-              },
-              onDisable: () {
-                appState.disableCharacter(characters[index]);
-              },
-              onSetInitiativeScore: (int initiativeScore) {
-                appState.setCharacterInitiativeScore(
-                    characters[index], initiativeScore);
-              },
-              roundOwner: index == appState.currentTurn && appState.inCombat,
-            );
-          },
-        ),
+            key: const PageStorageKey('InitiativeTrackerListView'),
+            itemCount: characters.length,
+            controller: appState.scrollController,
+            separatorBuilder: (BuildContext context, int index) {
+              return //constraints.maxWidth > 600
+                  //? const SizedBox(height: 10) :
+                  Divider(
+                color: Theme.of(context).colorScheme.inversePrimary,
+                height: 14,
+              );
+            },
+// child: AnimatedList(
+            itemBuilder: (context, index) {
+              return CharTile(
+                character: characters[index],
+                roundOwner: index == appState.currentTurn && appState.inCombat,
+              );
+            }
+            // initialItemCount: characters.length,
+            // itemBuilder: (context, index, animation) {
+            //   return FadeTransition(
+            //     opacity: Animation(),
+            //     child: CharTile(
+            //       character: characters[index],
+            //       roundOwner: index == appState.currentTurn && appState.inCombat,
+            //     ),
+            //   );
+            // },
+            ),
       );
     });
   }

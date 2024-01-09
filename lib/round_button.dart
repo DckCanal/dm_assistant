@@ -22,6 +22,7 @@ class RoundButton extends StatelessWidget {
         onPressed: onPressed,
         style: ButtonStyle(
           padding: MaterialStateProperty.all(EdgeInsets.zero),
+          elevation: MaterialStateProperty.all(0),
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
               if (states.contains(MaterialState.disabled)) {

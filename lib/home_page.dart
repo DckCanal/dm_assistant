@@ -15,10 +15,11 @@ class HomePage extends StatelessWidget {
     var appState = context.watch<AppState>();
     return Builder(builder: (context) {
       return DefaultTabController(
-        length: 3,
-        initialIndex: 1,
+        length: 2,
+        initialIndex: 0,
         child: Scaffold(
           appBar: AppBar(
+            // elevation: 1,
             title: TextButton(
                 onPressed: () async {
                   final result = await showDialog<String>(
@@ -56,9 +57,14 @@ class HomePage extends StatelessWidget {
                 },
               ),
             ],
-            bottom: const TabBar(
-              tabs: [
-                Tab(icon: Icon(Icons.people)),
+            bottom: TabBar(
+              // indicator: UnderlineTabIndicator(
+              //   borderSide: BorderSide(color: Colors.red, width: 3),
+              // ),
+              dividerColor: Theme.of(context).colorScheme.onPrimary,
+              dividerHeight: 2,
+              tabs: const [
+                //Tab(icon: Icon(Icons.people)),
                 Tab(icon: Icon(Icons.flash_on_outlined)),
                 Tab(icon: Icon(Icons.gamepad)),
               ],
@@ -66,7 +72,7 @@ class HomePage extends StatelessWidget {
           ),
           body: TabBarView(
             children: [
-              const CharacterView(),
+              //const CharacterView(),
               const InitiativeTracker(),
               DiceRoller(),
             ],

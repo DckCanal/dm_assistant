@@ -9,7 +9,7 @@ class AppState extends ChangeNotifier {
   final ScrollController scrollController = ScrollController();
   final Color defaultColor = const Color.fromARGB(255, 13, 0, 133);
   Color? userColor;
-  String campaignTitle = 'Nuova campagna';
+  String campaignTitle = 'Kraken bay';
   bool showDisabledChar = false;
 
   void setDisabledChar(bool newValue) {
@@ -63,6 +63,14 @@ class AppState extends ChangeNotifier {
     character.enabled = false;
     _sortCharacters();
     notifyListeners();
+  }
+
+  void setRoundOwner(Character character) {
+    int newTurnIndex = characters.indexOf(character);
+    if (newTurnIndex != -1) {
+      currentTurn = newTurnIndex;
+      notifyListeners();
+    }
   }
 
   void setCharacterInitiativeScore(Character character, int initiativeScore) {

@@ -4,11 +4,12 @@ import 'dice.dart';
 
 List<Character> getCharacters() {
   return [
-    Character(2, 'Malakay', 15),
-    //Character(3, 'Black Jack', 18),
-    Character(1, 'Jericho', 12),
-    Character(4, 'Merlok', 20),
-    Character(2, 'Durgan', 16),
+    Character(2, 'Malakay'),
+    //Character(1, 'Black Jack', 18),
+    Character(1, 'Jericho'),
+    Character(1, 'Merlok'),
+    //Character(1, 'Durgan'),
+    Character(1, 'Krom')
     // Character(2, 'Beholder', 16),
     // Character(1, 'Tarrasque', 17),
     // Character(6, 'Demogorgon', 7),
@@ -16,17 +17,28 @@ List<Character> getCharacters() {
   ];
 }
 
-List<RollResult> getRolls() {
+List<RollHistoryEntry> getRolls() {
   return [
-    RollResult(title: 'D20', result: 12),
-    RollResult(title: 'D12', result: 12),
-    RollResult(title: 'Attacco ghoul', result: 9, formula: '2d6+1'),
-    RollResult(title: 'D20', result: 9),
-    RollResult(title: 'D4', result: 2),
-    RollResult(title: '2d4+1', result: 7),
-    RollResult(title: 'D10', result: 3),
-    RollResult(title: 'D6', result: 6),
-    RollResult(title: 'Attacco vampiro', result: 12, formula: '2d8+2'),
-    RollResult(title: 'Attacco manipolatore', formula: '2d6+4', result: 13),
+    RollHistoryEntry(
+        roll: Roll(diceRolls: [DiceRoll(Dice.d20)], modifier: 2),
+        title: 'Attacco Mannfred'),
+    RollHistoryEntry(
+        roll: Roll(diceRolls: [
+          DiceRoll(Dice.d6),
+          DiceRoll(Dice.d6),
+          DiceRoll(Dice.d6)
+        ]),
+        title: 'Trappola palla di fuoco'),
+    RollHistoryEntry(
+        roll:
+            RollFormula(dices: [Dice.d4, Dice.d4, Dice.d4], modifier: 2).roll(),
+        title: 'Dardo arcano manipolatore'),
+    // Roll(diceRolls: 'D20', : 9),
+    // Roll(diceRolls: 'D4', : 2),
+    // Roll(diceRolls: '2d4+1', : 7),
+    // Roll(diceRolls: 'D10', : 3),
+    // Roll(diceRolls: 'D6', : 6),
+    // Roll(diceRolls: 'Attacco vampiro', : 12, formula: '2d8+2'),
+    // Roll(diceRolls: 'Attacco manipolatore', formula: '2d6+4', : 13),
   ];
 }

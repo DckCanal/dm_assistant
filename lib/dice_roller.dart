@@ -1,3 +1,4 @@
+//import 'package:dm_assistant/dice.dart';
 import 'package:dm_assistant/dice.dart';
 import 'package:dm_assistant/rect_button.dart';
 import 'package:dm_assistant/round_button.dart';
@@ -138,7 +139,7 @@ class RollHistory extends StatefulWidget {
 
 class _RollHistoryState extends State<RollHistory> {
   final ScrollController _controller = ScrollController();
-  List<RollResult> rolls = getRolls();
+  List<RollHistoryEntry> rolls = getRolls();
 
   @override
   void initState() {
@@ -195,12 +196,12 @@ class RollTile extends StatelessWidget {
     required this.roll,
   });
 
-  final RollResult roll;
+  final RollHistoryEntry roll;
 
   @override
   Widget build(BuildContext context) {
     Widget leading = Text(
-      roll.result.toString(),
+      roll.roll.value.toString(),
       style: Theme.of(context).textTheme.titleLarge,
     );
     Widget title = Text(roll.title);
@@ -209,14 +210,14 @@ class RollTile extends StatelessWidget {
         primary: false,
         icon: const Icon(Icons.refresh, size: 24),
         onPressed: () {});
-    if (roll.formula != null) {
+    if (roll.roll.rollFormula != null) {
       return Center(
         child: ListTile(
           horizontalTitleGap: 40,
           dense: true,
           leading: leading,
           title: title,
-          subtitle: Text(roll.formula ?? ''),
+          subtitle: Text(roll.roll.rollFormula ?? ''),
           trailing: trailing,
         ),
       );

@@ -23,100 +23,107 @@ class CharTile extends StatelessWidget {
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
     return LayoutBuilder(builder: (context, constraints) {
-      return Container(
-        height: 100,
-        decoration: BoxDecoration(
-          color: !character.enabled
-              ? Theme.of(context).colorScheme.surface
-              : (roundOwner == true
-                  ? Theme.of(context).colorScheme.onPrimary
-                  : Colors.black),
-          border: //constraints.maxWidth <= 600 ?
-              null,
-          // : Border.all(
-          //     color: character.enabled
-          //         ? Theme.of(context).colorScheme.inversePrimary
-          //         : Theme.of(context).colorScheme.onInverseSurface,
-          //     width: 2),
-          borderRadius: BorderRadius.circular(10),
-          // boxShadow: roundOwner && constraints.maxWidth > 600
-          //     ? [
-          //         BoxShadow(
-          //           color: Theme.of(context)
-          //               .colorScheme
-          //               .inversePrimary
-          //               .withOpacity(0.2),
-          //           spreadRadius: 3,
-          //           blurRadius: 4,
-          //           offset: const Offset(2, 3),
-          //         ),
-          //       ]
-          //     : null,
-          boxShadow: null,
-        ),
-        //color: Colors.green,
-        //width: ,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Row(children: [
-          OutlinedButton(
-            onPressed: () async {
-              final result = await showDialog<int>(
-                context: context,
-                builder: (context) {
-                  int initiativeScore = character.initiativeScore ?? 0;
-                  // final FocusNode unitCodeCtrlFocusNode = FocusNode();
-                  // unitCodeCtrlFocusNode.requestFocus();
-                  return InitiativeDialog(initiativeScore: initiativeScore);
-                },
-              );
-              if (result != null) {
-                //onSetInitiativeScore(result);
-                appState.setCharacterInitiativeScore(character, result);
-              }
-            },
-            child: SizedBox(
-              height: 60,
-              width: 50,
-              child: Center(
-                child: Text(
-                  character.initiativeScore.toString(),
-                  style: const TextStyle(fontSize: 28),
+      return GestureDetector(
+        onTap: () {
+          if (appState.inCombat && character.enabled) {
+            appState.setRoundOwner(character);
+          }
+        },
+        child: Container(
+          height: 100,
+          decoration: BoxDecoration(
+            color: !character.enabled
+                ? Theme.of(context).colorScheme.surface
+                : (roundOwner == true
+                    ? Theme.of(context).colorScheme.onPrimary
+                    : Colors.black),
+            border: //constraints.maxWidth <= 600 ?
+                null,
+            // : Border.all(
+            //     color: character.enabled
+            //         ? Theme.of(context).colorScheme.inversePrimary
+            //         : Theme.of(context).colorScheme.onInverseSurface,
+            //     width: 2),
+            borderRadius: BorderRadius.circular(10),
+            // boxShadow: roundOwner && constraints.maxWidth > 600
+            //     ? [
+            //         BoxShadow(
+            //           color: Theme.of(context)
+            //               .colorScheme
+            //               .inversePrimary
+            //               .withOpacity(0.2),
+            //           spreadRadius: 3,
+            //           blurRadius: 4,
+            //           offset: const Offset(2, 3),
+            //         ),
+            //       ]
+            //     : null,
+            boxShadow: null,
+          ),
+          //color: Colors.green,
+          //width: ,
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(children: [
+            OutlinedButton(
+              onPressed: () async {
+                final result = await showDialog<int>(
+                  context: context,
+                  builder: (context) {
+                    int initiativeScore = character.initiativeScore ?? 0;
+                    // final FocusNode unitCodeCtrlFocusNode = FocusNode();
+                    // unitCodeCtrlFocusNode.requestFocus();
+                    return InitiativeDialog(initiativeScore: initiativeScore);
+                  },
+                );
+                if (result != null) {
+                  //onSetInitiativeScore(result);
+                  appState.setCharacterInitiativeScore(character, result);
+                }
+              },
+              child: SizedBox(
+                height: 60,
+                width: 50,
+                child: Center(
+                  child: Text(
+                    character.initiativeScore.toString(),
+                    style: const TextStyle(fontSize: 28),
+                  ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(width: 20),
-          Expanded(
-              child: Text(character.name, overflow: TextOverflow.ellipsis)),
-          RectButton(
-            primary: false,
-            height: 60,
-            width: 60,
-            onPressed: () => appState.removeCharacter(character),
-            icon: const Icon(
-              Icons.delete,
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: 20),
-          RectButton(
+            const SizedBox(width: 20),
+            Expanded(
+                child: Text(character.name, overflow: TextOverflow.ellipsis)),
+            RectButton(
               primary: false,
-              onPressed: character.enabled
-                  ? () => appState.disableCharacter(character)
-                  : () => appState.enableCharacter(character),
               height: 60,
               width: 60,
-              icon: const Icon(Icons.no_accounts))
-        ]),
-        //     SizedBox(
-        //       width: 140,
-        //       child: Row(
-        //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //           children: [
+              onPressed: () => appState.removeCharacter(character),
+              icon: const Icon(
+                Icons.delete,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 20),
+            RectButton(
+                primary: false,
+                onPressed: character.enabled
+                    ? () => appState.disableCharacter(character)
+                    : () => appState.enableCharacter(character),
+                height: 60,
+                width: 60,
+                icon: const Icon(Icons.no_accounts))
+          ]),
+          //     SizedBox(
+          //       width: 140,
+          //       child: Row(
+          //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //           children: [
 
-        //     ),
-        //   ],
-        // ),
+          //     ),
+          //   ],
+          // ),
+        ),
       );
     });
   }

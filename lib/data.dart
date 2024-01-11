@@ -33,6 +33,7 @@ List<RollHistoryEntry> getRolls() {
         roll:
             RollFormula(dices: [Dice.d4, Dice.d4, Dice.d4], modifier: 2).roll(),
         title: 'Dardo arcano manipolatore'),
+    RollHistoryEntry(roll: RollFormula.fromString('2d6+d4+3').roll()),
     // Roll(diceRolls: 'D20', : 9),
     // Roll(diceRolls: 'D4', : 2),
     // Roll(diceRolls: '2d4+1', : 7),

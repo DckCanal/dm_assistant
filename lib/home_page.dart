@@ -1,5 +1,5 @@
 import 'package:dm_assistant/app_state.dart';
-import 'package:dm_assistant/character_view.dart';
+// import 'package:dm_assistant/character_view.dart';
 import 'package:dm_assistant/dice_roller.dart';
 import 'package:dm_assistant/initiative_tracker.dart';
 import 'package:flutter/material.dart';
@@ -70,10 +70,10 @@ class HomePage extends StatelessWidget {
               ],
             ),
           ),
-          body: TabBarView(
+          body: const TabBarView(
             children: [
               //const CharacterView(),
-              const InitiativeTracker(),
+              InitiativeTracker(),
               DiceRoller(),
             ],
           ),

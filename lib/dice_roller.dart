@@ -1,18 +1,22 @@
 //import 'package:dm_assistant/dice.dart';
+import 'package:dm_assistant/app_state.dart';
 import 'package:dm_assistant/dice.dart';
 import 'package:dm_assistant/rect_button.dart';
 import 'package:dm_assistant/round_button.dart';
 import 'package:flutter/material.dart';
-import 'data.dart';
+import 'package:provider/provider.dart';
+// import 'data.dart';
 
 class DiceRoller extends StatelessWidget {
+  const DiceRoller({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.black,
+      //color: Colors.black,
       child: const Row(
         children: [
-          SavedRollList(),
+          //SavedRollList(),
           Expanded(
             child: Column(children: [
               RollHistory(),
@@ -33,6 +37,12 @@ class DicePanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<AppState>();
+    void addRoll(Dice dice) {
+      appState.addRollHistoryEntry(
+          RollHistoryEntry(roll: RollFormula(dices: [dice]).roll()));
+    }
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -40,48 +50,62 @@ class DicePanel extends StatelessWidget {
           border: Border(
               top: BorderSide(
                   width: 2, color: Theme.of(context).colorScheme.onPrimary))),
-      child: Row(children: [
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         RectButton(
           primary: false,
           width: 90,
           child: const Text('D20'),
-          onPressed: () {},
+          onPressed: () {
+            addRoll(Dice.d20);
+          },
         ),
         RectButton(
           primary: false,
           width: 90,
           child: const Text('D100'),
-          onPressed: () {},
+          onPressed: () {
+            addRoll(Dice.d100);
+          },
         ),
         RectButton(
           primary: false,
           width: 90,
           child: const Text('D12'),
-          onPressed: () {},
+          onPressed: () {
+            addRoll(Dice.d12);
+          },
         ),
         RectButton(
           primary: false,
           width: 90,
           child: const Text('D10'),
-          onPressed: () {},
+          onPressed: () {
+            addRoll(Dice.d10);
+          },
         ),
         RectButton(
           primary: false,
           width: 90,
           child: const Text('D8'),
-          onPressed: () {},
+          onPressed: () {
+            addRoll(Dice.d8);
+          },
         ),
         RectButton(
           primary: false,
           width: 90,
           child: const Text('D6'),
-          onPressed: () {},
+          onPressed: () {
+            addRoll(Dice.d6);
+          },
         ),
         RectButton(
           primary: false,
           width: 90,
           child: const Text('D4'),
-          onPressed: () {},
+          onPressed: () {
+            addRoll(Dice.d4);
+          },
         ),
       ]),
     );
@@ -139,7 +163,7 @@ class RollHistory extends StatefulWidget {
 
 class _RollHistoryState extends State<RollHistory> {
   final ScrollController _controller = ScrollController();
-  List<RollHistoryEntry> rolls = getRolls();
+  //List<RollHistoryEntry> rolls = getRolls();
 
   @override
   void initState() {
@@ -160,6 +184,7 @@ class _RollHistoryState extends State<RollHistory> {
 
   @override
   Widget build(BuildContext context) {
+    var rolls = context.watch<AppState>().rollHistory;
     return Expanded(
       child: Center(
         child: SizedBox(
@@ -169,16 +194,20 @@ class _RollHistoryState extends State<RollHistory> {
             key: const PageStorageKey('RollHistoryListView'),
             controller: _controller,
             separatorBuilder: (BuildContext context, int index) {
-              return const SizedBox(height: 6);
+              //return const SizedBox(height: 6);
+              return Divider(
+                color: Theme.of(context).colorScheme.inversePrimary,
+                thickness: 1,
+              );
             },
             itemBuilder: (context, index) {
               return Container(
-                  height: 80,
+                  height: 60,
                   decoration: BoxDecoration(
-                    color: Colors.black,
-                    border: Border.all(
-                        color: Theme.of(context).colorScheme.inversePrimary,
-                        width: 2),
+                    //color: Colors.black,
+                    // border: Border.all(
+                    //     color: Theme.of(context).colorScheme.inversePrimary,
+                    //     width: 2),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: RollTile(roll: rolls[index]));
@@ -191,47 +220,48 @@ class _RollHistoryState extends State<RollHistory> {
 }
 
 class RollTile extends StatelessWidget {
+  final RollHistoryEntry roll;
+
   const RollTile({
     super.key,
     required this.roll,
   });
 
-  final RollHistoryEntry roll;
-
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<AppState>();
     Widget leading = Text(
       roll.roll.value.toString(),
       style: Theme.of(context).textTheme.titleLarge,
     );
-    Widget title = Text(roll.title);
-    Widget trailing = RoundButton(
-        radius: 40,
-        primary: false,
-        icon: const Icon(Icons.refresh, size: 24),
-        onPressed: () {});
-    if (roll.roll.rollFormula != null) {
-      return Center(
+    Widget title = Text(roll.title ?? roll.roll.rollFormula);
+    // Widget trailing = RoundButton(
+    //     radius: 40,
+    //     primary: false,
+    //     icon: const Icon(Icons.refresh, size: 24),
+    //     onPressed: () {
+    //       appState.addRollHistoryEntry(RollHistoryEntry(
+    //           roll: RollFormula.fromString(roll.roll.rollFormula).roll(),
+    //           title: roll.title));
+    //     });
+    return Center(
+      child: InkWell(
+        onTap: () {
+          appState.addRollHistoryEntry(RollHistoryEntry(
+              roll: RollFormula.fromString(roll.roll.rollFormula).roll(),
+              title: roll.title));
+        },
+        //highlightColor: Theme.of(context).colorScheme.primaryContainer,
         child: ListTile(
           horizontalTitleGap: 40,
-          dense: true,
+          //dense: false,
           leading: leading,
           title: title,
-          subtitle: Text(roll.roll.rollFormula ?? ''),
-          trailing: trailing,
+          subtitle: roll.title != null ? Text(roll.roll.rollFormula) : null,
+          //trailing: trailing,
         ),
-      );
-    } else {
-      return Center(
-        child: ListTile(
-          horizontalTitleGap: 40,
-          dense: true,
-          leading: leading,
-          title: title,
-          trailing: trailing,
-        ),
-      );
-    }
+      ),
+    );
   }
 }
 

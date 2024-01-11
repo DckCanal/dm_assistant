@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'character.dart';
+import 'dice.dart';
 import 'data.dart';
 
 class AppState extends ChangeNotifier {
   List<Character> characters = getCharacters();
+  List<RollHistoryEntry> rollHistory = getRolls();
   int currentTurn = 0;
   bool inCombat = false;
   final ScrollController scrollController = ScrollController();
@@ -142,6 +144,17 @@ class AppState extends ChangeNotifier {
 
   void changeColor(Color color) {
     userColor = color;
+    notifyListeners();
+  }
+
+  void addRollHistoryEntry(RollHistoryEntry entry) {
+    rollHistory.add(entry);
+
+    // Controlla se la lista supera la dimensione massima (100 elementi)
+    if (rollHistory.length > 100) {
+      // Rimuovi il tiro di dado più vecchio
+      rollHistory.removeAt(0);
+    }
     notifyListeners();
   }
 }

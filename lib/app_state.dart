@@ -1,3 +1,4 @@
+import 'package:dm_assistant/dice_roller.dart';
 import 'package:flutter/material.dart';
 import 'character.dart';
 import 'dice.dart';
@@ -13,6 +14,8 @@ class AppState extends ChangeNotifier {
   Color? userColor;
   String campaignTitle = 'Kraken bay';
   bool showDisabledChar = false;
+
+  GlobalKey? animatedRollHistoryListKey;
 
   void setDisabledChar(bool newValue) {
     showDisabledChar = newValue;
@@ -148,13 +151,18 @@ class AppState extends ChangeNotifier {
   }
 
   void addRollHistoryEntry(RollHistoryEntry entry) {
-    rollHistory.add(entry);
+    rollHistory.insert(0, entry);
 
+    var animatedList =
+        animatedRollHistoryListKey?.currentState as AnimatedListState?;
     // Controlla se la lista supera la dimensione massima (100 elementi)
     if (rollHistory.length > 100) {
       // Rimuovi il tiro di dado più vecchio
-      rollHistory.removeAt(0);
+      RollHistoryEntry removedItem = rollHistory.removeAt(100);
+      animatedList?.removeItem(
+          99, (context, animation) => RollTile(roll: removedItem));
     }
+    animatedList?.insertItem(0);
     notifyListeners();
   }
 }

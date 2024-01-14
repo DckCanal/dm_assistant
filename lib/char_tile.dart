@@ -22,7 +22,10 @@ class CharTile extends StatelessWidget {
         },
         overlayColor: MaterialStateColor.resolveWith((states) {
           if (states.contains(MaterialState.hovered)) {
-            return Theme.of(context).highlightColor;
+            return Theme.of(context)
+                .colorScheme
+                .inversePrimary
+                .withOpacity(0.7);
           }
           return Colors.black;
         }),
@@ -35,31 +38,8 @@ class CharTile extends StatelessWidget {
                 : (roundOwner == true
                     ? Theme.of(context).colorScheme.onPrimary.withOpacity(0.8)
                     : Colors.black.withOpacity(0.3)),
-            border: //constraints.maxWidth <= 600 ?
-                null,
-            // : Border.all(
-            //     color: character.enabled
-            //         ? Theme.of(context).colorScheme.inversePrimary
-            //         : Theme.of(context).colorScheme.onInverseSurface,
-            //     width: 2),
-            //borderRadius: BorderRadius.circular(10),
-            // boxShadow: roundOwner && constraints.maxWidth > 600
-            //     ? [
-            //         BoxShadow(
-            //           color: Theme.of(context)
-            //               .colorScheme
-            //               .inversePrimary
-            //               .withOpacity(0.2),
-            //           spreadRadius: 3,
-            //           blurRadius: 4,
-            //           offset: const Offset(2, 3),
-            //         ),
-            //       ]
-            //     : null,
             boxShadow: null,
           ),
-          //color: Colors.green,
-          //width: ,
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(children: [
             OutlinedButton(
@@ -68,13 +48,10 @@ class CharTile extends StatelessWidget {
                   context: context,
                   builder: (context) {
                     int initiativeScore = character.initiativeScore ?? 0;
-                    // final FocusNode unitCodeCtrlFocusNode = FocusNode();
-                    // unitCodeCtrlFocusNode.requestFocus();
                     return InitiativeDialog(initiativeScore: initiativeScore);
                   },
                 );
                 if (result != null) {
-                  //onSetInitiativeScore(result);
                   appState.setCharacterInitiativeScore(character, result);
                 }
               },
@@ -112,15 +89,6 @@ class CharTile extends StatelessWidget {
                 width: 60,
                 icon: const Icon(Icons.no_accounts))
           ]),
-          //     SizedBox(
-          //       width: 140,
-          //       child: Row(
-          //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //           children: [
-
-          //     ),
-          //   ],
-          // ),
         ),
       );
     });

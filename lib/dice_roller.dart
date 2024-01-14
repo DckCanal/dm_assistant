@@ -1,34 +1,21 @@
-//import 'package:dm_assistant/dice.dart';
 import 'package:dm_assistant/app_state.dart';
 import 'package:dm_assistant/dice.dart';
 import 'package:dm_assistant/rect_button.dart';
-import 'package:dm_assistant/round_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-// import 'data.dart';
 
 class DiceRoller extends StatelessWidget {
   const DiceRoller({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      //color: Colors.black,
-      child: const Row(
-        children: [
-          //SavedRollList(),
-          Expanded(
-            child: Material(
-              color: Colors.black,
-              child: Column(children: [
-                RollHistory(),
-                DicePanel(),
-                CustomRollPanel(),
-              ]),
-            ),
-          )
-        ],
-      ),
+    return const Material(
+      color: Colors.black,
+      child: Column(children: [
+        Expanded(child: RollHistory()),
+        DicePanel(),
+        CustomRollPanel(),
+      ]),
     );
   }
 }
@@ -168,50 +155,26 @@ class RollHistory extends StatefulWidget {
 }
 
 class _RollHistoryState extends State<RollHistory> {
-  final ScrollController _controller = ScrollController();
-  //List<RollHistoryEntry> rolls = getRolls();
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _controller.animateTo(_controller.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
-    });
-  }
-
-  void _scrollDown() {
-    _controller.animateTo(
-      _controller.position.maxScrollExtent,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.fastOutSlowIn,
-    );
-  }
+  final _key = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    var rolls = context.watch<AppState>().rollHistory;
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Center(
-          child: ListView.separated(
-            itemCount: rolls.length,
-            key: const PageStorageKey('RollHistoryListView'),
-            controller: _controller,
-            separatorBuilder: (BuildContext context, int index) {
-              //return const SizedBox(height: 6);
-              return Divider(
-                color: Theme.of(context).colorScheme.inversePrimary,
-                thickness: 1,
-                height: 1,
-              );
-            },
-            itemBuilder: (context, index) {
-              // return Container(height: 70, child: RollTile(roll: rolls[index]));
-              return RollTile(roll: rolls[index]);
-            },
-          ),
+    var appState = context.watch<AppState>();
+    var rolls = appState.rollHistory;
+    appState.animatedRollHistoryListKey = _key;
+    return Container(
+      constraints: const BoxConstraints(maxWidth: 800),
+      padding: const EdgeInsets.all(12.0),
+      child: Center(
+        child: AnimatedList(
+          key: _key,
+          reverse: true,
+          initialItemCount: rolls.length,
+          itemBuilder: (context, index, animation) {
+            RollHistoryEntry roll = rolls[index];
+            return SizeTransition(
+                sizeFactor: animation, child: RollTile(roll: roll));
+          },
         ),
       ),
     );
@@ -231,24 +194,44 @@ class RollTile extends StatelessWidget {
     var appState = context.watch<AppState>();
     Widget leading = Text(
       roll.roll.value.toString(),
-      style: Theme.of(context).textTheme.titleLarge,
+      style: Theme.of(context)
+          .textTheme
+          .titleLarge
+          ?.copyWith(color: Theme.of(context).colorScheme.primary),
+      //style: const TextStyle(fontSize: 28),
     );
-    Widget title = Text(roll.title ?? roll.roll.rollFormula);
-    return InkWell(
-      onTap: () {
-        appState.addRollHistoryEntry(RollHistoryEntry(
-            roll: RollFormula.fromString(roll.roll.rollFormula).roll(),
-            title: roll.title));
-      },
+    Widget title = Text(roll.title ?? roll.roll.rollFormula,
+        style: Theme.of(context).textTheme.bodyMedium);
+    return Center(
       child: SizedBox(
         height: 100,
-        child: Center(
-          child: ListTile(
-            horizontalTitleGap: 40,
-            dense: false,
-            leading: leading,
-            title: title,
-            subtitle: roll.title != null ? Text(roll.roll.rollFormula) : null,
+        width: 600,
+        child: InkWell(
+          onTap: () {
+            appState.addRollHistoryEntry(RollHistoryEntry(
+                roll: RollFormula.fromString(roll.roll.rollFormula).roll(),
+                title: roll.title));
+          },
+          overlayColor: MaterialStateColor.resolveWith((states) {
+            if (states.contains(MaterialState.hovered)) {
+              return Theme.of(context)
+                  .colorScheme
+                  .inversePrimary
+                  .withOpacity(0.7);
+            }
+            return Colors.transparent;
+          }),
+          child: Center(
+            child: ListTile(
+              horizontalTitleGap: 60,
+              leading: leading,
+              title: title,
+              subtitle: roll.title != null
+                  ? Text(roll.roll.rollFormula,
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.inversePrimary))
+                  : null,
+            ),
           ),
         ),
       ),

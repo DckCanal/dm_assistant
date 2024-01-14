@@ -18,11 +18,14 @@ class DiceRoller extends StatelessWidget {
         children: [
           //SavedRollList(),
           Expanded(
-            child: Column(children: [
-              RollHistory(),
-              DicePanel(),
-              CustomRollPanel(),
-            ]),
+            child: Material(
+              color: Colors.black,
+              child: Column(children: [
+                RollHistory(),
+                DicePanel(),
+                CustomRollPanel(),
+              ]),
+            ),
           )
         ],
       ),
@@ -125,28 +128,31 @@ class _CustomRollPanelState extends State<CustomRollPanel> {
   String rollString = '';
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              decoration:
-                  const InputDecoration(labelText: 'Tiro personalizzato'),
-              onChanged: (value) {
-                setState(() {
-                  rollString = value;
-                });
-              },
+    return Material(
+      color: Colors.black,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                decoration:
+                    const InputDecoration(labelText: 'Tiro personalizzato'),
+                onChanged: (value) {
+                  setState(() {
+                    rollString = value;
+                  });
+                },
+              ),
             ),
-          ),
-          RectButton(
-            primary: true,
-            width: 60,
-            icon: const Icon(Icons.send),
-            onPressed: () {},
-          )
-        ],
+            RectButton(
+              primary: true,
+              width: 60,
+              icon: const Icon(Icons.send),
+              onPressed: () {},
+            )
+          ],
+        ),
       ),
     );
   }
@@ -186,9 +192,9 @@ class _RollHistoryState extends State<RollHistory> {
   Widget build(BuildContext context) {
     var rolls = context.watch<AppState>().rollHistory;
     return Expanded(
-      child: Center(
-        child: SizedBox(
-          width: 600,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Center(
           child: ListView.separated(
             itemCount: rolls.length,
             key: const PageStorageKey('RollHistoryListView'),
@@ -198,19 +204,12 @@ class _RollHistoryState extends State<RollHistory> {
               return Divider(
                 color: Theme.of(context).colorScheme.inversePrimary,
                 thickness: 1,
+                height: 1,
               );
             },
             itemBuilder: (context, index) {
-              return Container(
-                  height: 60,
-                  decoration: BoxDecoration(
-                    //color: Colors.black,
-                    // border: Border.all(
-                    //     color: Theme.of(context).colorScheme.inversePrimary,
-                    //     width: 2),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: RollTile(roll: rolls[index]));
+              // return Container(height: 70, child: RollTile(roll: rolls[index]));
+              return RollTile(roll: rolls[index]);
             },
           ),
         ),
@@ -235,30 +234,22 @@ class RollTile extends StatelessWidget {
       style: Theme.of(context).textTheme.titleLarge,
     );
     Widget title = Text(roll.title ?? roll.roll.rollFormula);
-    // Widget trailing = RoundButton(
-    //     radius: 40,
-    //     primary: false,
-    //     icon: const Icon(Icons.refresh, size: 24),
-    //     onPressed: () {
-    //       appState.addRollHistoryEntry(RollHistoryEntry(
-    //           roll: RollFormula.fromString(roll.roll.rollFormula).roll(),
-    //           title: roll.title));
-    //     });
-    return Center(
-      child: InkWell(
-        onTap: () {
-          appState.addRollHistoryEntry(RollHistoryEntry(
-              roll: RollFormula.fromString(roll.roll.rollFormula).roll(),
-              title: roll.title));
-        },
-        //highlightColor: Theme.of(context).colorScheme.primaryContainer,
-        child: ListTile(
-          horizontalTitleGap: 40,
-          //dense: false,
-          leading: leading,
-          title: title,
-          subtitle: roll.title != null ? Text(roll.roll.rollFormula) : null,
-          //trailing: trailing,
+    return InkWell(
+      onTap: () {
+        appState.addRollHistoryEntry(RollHistoryEntry(
+            roll: RollFormula.fromString(roll.roll.rollFormula).roll(),
+            title: roll.title));
+      },
+      child: SizedBox(
+        height: 100,
+        child: Center(
+          child: ListTile(
+            horizontalTitleGap: 40,
+            dense: false,
+            leading: leading,
+            title: title,
+            subtitle: roll.title != null ? Text(roll.roll.rollFormula) : null,
+          ),
         ),
       ),
     );
@@ -275,7 +266,7 @@ class SavedRollList extends StatelessWidget {
     return Container(
       width: 500,
       decoration: BoxDecoration(
-        color: Colors.black,
+        //color: Colors.black,
         border: Border(
           right: BorderSide(
               width: 2, color: Theme.of(context).colorScheme.onPrimary),

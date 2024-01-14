@@ -6,37 +6,35 @@ import 'package:provider/provider.dart';
 
 class CharTile extends StatelessWidget {
   final Character character;
-  // final VoidCallback onDelete, onEnable, onDisable;
-  // final void Function(int) onSetInitiativeScore;
   final bool roundOwner;
 
-  const CharTile(
-      {required this.character,
-      // required this.onDelete,
-      // required this.onEnable,
-      // required this.onDisable,
-      // required this.onSetInitiativeScore,
-      this.roundOwner = false,
-      super.key});
+  const CharTile({required this.character, this.roundOwner = false, super.key});
 
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
     return LayoutBuilder(builder: (context, constraints) {
-      return GestureDetector(
+      return InkWell(
         onTap: () {
           if (appState.inCombat && character.enabled) {
             appState.setRoundOwner(character);
           }
         },
-        child: Container(
-          height: 100,
+        overlayColor: MaterialStateColor.resolveWith((states) {
+          if (states.contains(MaterialState.hovered)) {
+            return Theme.of(context).highlightColor;
+          }
+          return Colors.black;
+        }),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          height: 112,
           decoration: BoxDecoration(
             color: !character.enabled
-                ? Theme.of(context).colorScheme.surface
+                ? Theme.of(context).colorScheme.surface.withOpacity(0.3)
                 : (roundOwner == true
-                    ? Theme.of(context).colorScheme.onPrimary
-                    : Colors.black),
+                    ? Theme.of(context).colorScheme.onPrimary.withOpacity(0.8)
+                    : Colors.black.withOpacity(0.3)),
             border: //constraints.maxWidth <= 600 ?
                 null,
             // : Border.all(
@@ -44,7 +42,7 @@ class CharTile extends StatelessWidget {
             //         ? Theme.of(context).colorScheme.inversePrimary
             //         : Theme.of(context).colorScheme.onInverseSurface,
             //     width: 2),
-            borderRadius: BorderRadius.circular(10),
+            //borderRadius: BorderRadius.circular(10),
             // boxShadow: roundOwner && constraints.maxWidth > 600
             //     ? [
             //         BoxShadow(

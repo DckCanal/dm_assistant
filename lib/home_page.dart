@@ -19,7 +19,8 @@ class HomePage extends StatelessWidget {
         initialIndex: 0,
         child: Scaffold(
           appBar: AppBar(
-            // elevation: 1,
+            ///elevation: 0,
+            backgroundColor: Colors.black,
             title: TextButton(
                 onPressed: () async {
                   final result = await showDialog<String>(
@@ -34,7 +35,7 @@ class HomePage extends StatelessWidget {
                   }
                 },
                 child: Text(appState.campaignTitle)),
-            backgroundColor: Colors.black,
+            //  backgroundColor: Colors.black,
             actions: <Widget>[
               IconButton(
                 icon: const Icon(Icons.color_lens),

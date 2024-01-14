@@ -11,8 +11,10 @@ class InitiativeTracker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
-    return Container(
+    //return Container(
+    return Material(
       color: Colors.black,
+      //decoration: BoxDecoration(color: Colors.black),
       child: Column(children: [
         // const SizedBox(height: 20),
         // Text(appState.inCombat ? 'In combattimento' : 'Fuori combattimento'),
@@ -35,84 +37,6 @@ class InitiativeTracker extends StatelessWidget {
     );
   }
 }
-
-// class DisabledCharacterList extends StatelessWidget {
-//   const DisabledCharacterList({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     var appState = context.watch<AppState>();
-//     List<Widget> charList = appState.characters
-//         .where(
-//           (char) => !char.enabled,
-//         )
-//         .map((char) => SizedBox(
-//               width: 280,
-//               child: ListTile(
-//                   title: Text(char.name),
-//                   subtitle: Text('Iniziativa ${char.initiativeScore}'),
-
-//                   onTap: () {
-//                     appState.enableCharacter(char);
-//                   }),
-//             ))
-//         .toList();
-
-//     return AnimatedContainer(
-//       duration: const Duration(milliseconds: 400),
-//       curve: Curves.easeInExpo,
-//       width: appState.characters.isNotEmpty ? 300 : 0,
-//       child: ListView(
-//         padding: const EdgeInsets.all(12),
-//         children: charList,
-//       ),
-//     );
-//   }
-// }
-
-// class DisabledCharacterDrawer extends StatelessWidget {
-//   const DisabledCharacterDrawer({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     var appState = context.watch<AppState>();
-//     List<Widget> charList = appState.characters
-//         .map((char) => ListTile(
-//               title: Text(char.name),
-//               subtitle: Text('Iniziativa ${char.initiativeScore}'),
-//               onTap: () {
-//                 appState.enableCharacter(char);
-//               },
-//             ))
-//         .toList();
-
-//     // Aggiungi il DrawerHeader come primo elemento della ListView
-//     // TODO: fix bug!
-//     charList.insert(
-//       0,
-//       DrawerHeader(
-//           child: Row(
-//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//         children: [
-//           const Text('Fuori combattimento'),
-//           IconButton(onPressed: () {}, icon: const Icon(Icons.close))
-//         ],
-//       )),
-//     );
-
-//     return SizedBox(
-//       width: 300,
-//       child: Drawer(
-//         surfaceTintColor: Colors.transparent,
-//         backgroundColor: Colors.black,
-//         child: ListView(
-//           padding: EdgeInsets.zero,
-//           children: charList,
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 class CharacterList extends StatelessWidget {
   const CharacterList({super.key});
@@ -137,7 +61,7 @@ class CharacterList extends StatelessWidget {
                   //? const SizedBox(height: 10) :
                   Divider(
                 color: Theme.of(context).colorScheme.inversePrimary,
-                height: 14,
+                height: 2,
               );
             },
 // child: AnimatedList(

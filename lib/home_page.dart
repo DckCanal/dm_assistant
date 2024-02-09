@@ -87,7 +87,7 @@ class HomePage extends StatelessWidget {
 class CampaignTitleDialog extends StatefulWidget {
   final String oldTitle;
 
-  CampaignTitleDialog({required this.oldTitle, super.key});
+  const CampaignTitleDialog({required this.oldTitle, super.key});
   @override
   _CampaignTitleDialogState createState() => _CampaignTitleDialogState();
 }

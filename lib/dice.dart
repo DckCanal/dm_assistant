@@ -233,7 +233,7 @@ class RollFormula {
     if (newDices.isNotEmpty) {
       String newDiceFormula =
           newDices.map((dice) => dice.representation).join('+');
-      result += result.isNotEmpty ? '+' + newDiceFormula : newDiceFormula;
+      result += result.isNotEmpty ? '+$newDiceFormula' : newDiceFormula;
     }
 
     // Aggiungi nuovo modificatore

@@ -98,7 +98,7 @@ class CharTile extends StatelessWidget {
 class InitiativeDialog extends StatefulWidget {
   final int initiativeScore;
 
-  InitiativeDialog({required this.initiativeScore, super.key});
+  const InitiativeDialog({required this.initiativeScore, super.key});
 
   @override
   _InitiativeDialogState createState() => _InitiativeDialogState();

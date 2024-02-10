@@ -31,7 +31,7 @@ class CharTile extends StatelessWidget {
         }),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
-          height: 112,
+          height: 80,
           decoration: BoxDecoration(
             color: !character.enabled
                 ? Theme.of(context).colorScheme.surface.withOpacity(0.3)
@@ -43,7 +43,17 @@ class CharTile extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(children: [
             OutlinedButton(
+              style: ButtonStyle(
+                  side: MaterialStateProperty.resolveWith<BorderSide?>(
+                      (states) => BorderSide(
+                          color: Theme.of(context).colorScheme.inversePrimary)),
+                  shape: MaterialStateProperty.resolveWith<OutlinedBorder?>(
+                      (states) => const CircleBorder())),
+              //InkWell(
               onPressed: () async {
+                //customBorder: CircleBorder(),
+
+                // onTap: () async {
                 final result = await showDialog<int>(
                   context: context,
                   builder: (context) {
@@ -56,23 +66,25 @@ class CharTile extends StatelessWidget {
                 }
               },
               child: SizedBox(
-                height: 60,
-                width: 50,
+                height: 58,
+                width: 58,
                 child: Center(
                   child: Text(
                     character.initiativeScore.toString(),
-                    style: const TextStyle(fontSize: 28),
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
                 ),
               ),
             ),
             const SizedBox(width: 20),
             Expanded(
-                child: Text(character.name, overflow: TextOverflow.ellipsis)),
+                child: Text(character.name,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyLarge)),
             RectButton(
               primary: false,
-              height: 60,
-              width: 60,
+              height: 40,
+              width: 40,
               onPressed: () => appState.removeCharacter(character),
               icon: const Icon(
                 Icons.delete,
@@ -85,8 +97,8 @@ class CharTile extends StatelessWidget {
                 onPressed: character.enabled
                     ? () => appState.disableCharacter(character)
                     : () => appState.enableCharacter(character),
-                height: 60,
-                width: 60,
+                height: 40,
+                width: 40,
                 icon: const Icon(Icons.no_accounts))
           ]),
         ),

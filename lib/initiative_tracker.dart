@@ -11,13 +11,9 @@ class InitiativeTracker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
-    //return Container(
     return Material(
       color: Colors.black,
-      //decoration: BoxDecoration(color: Colors.black),
       child: Column(children: [
-        // const SizedBox(height: 20),
-        // Text(appState.inCombat ? 'In combattimento' : 'Fuori combattimento'),
         const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

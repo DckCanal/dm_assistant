@@ -114,7 +114,7 @@ class AppState extends ChangeNotifier {
           nextTurnOrStartCombat();
         } else {
           scrollController.animateTo(
-            currentTurn * 114,
+            currentTurn * 82,
             duration: const Duration(milliseconds: 500),
             curve: Curves.easeInOut,
           );

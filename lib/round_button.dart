@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 class RoundButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool primary;
-  final Icon icon;
+  final Icon? icon;
   final double radius;
+  final Widget? child;
 
   const RoundButton(
       {this.onPressed,
       required this.primary,
-      required this.icon,
+      this.icon,
+      this.child,
       this.radius = 48.0,
       super.key});
 
@@ -45,7 +47,7 @@ class RoundButton extends StatelessWidget {
             ),
           ),
         ),
-        child: Center(child: icon),
+        child: child ?? Center(child: icon),
       ),
     );
     // return Ink(

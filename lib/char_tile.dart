@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'character.dart';
 import 'rect_button.dart';
 import 'app_state.dart';
+import 'round_button.dart';
 import 'package:provider/provider.dart';
 
 class CharTile extends StatelessWidget {
@@ -13,6 +14,14 @@ class CharTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
+    var textTheme = switch (character.enabled) {
+      true => Theme.of(context).textTheme.bodyLarge,
+      false => Theme.of(context)
+          .textTheme
+          .bodyLarge
+          ?.copyWith(color: Colors.grey)
+          .copyWith(decoration: TextDecoration.lineThrough),
+    };
     return LayoutBuilder(builder: (context, constraints) {
       return InkWell(
         onTap: () {
@@ -34,7 +43,7 @@ class CharTile extends StatelessWidget {
           height: 80,
           decoration: BoxDecoration(
             color: !character.enabled
-                ? Theme.of(context).colorScheme.surface.withOpacity(0.3)
+                ? Theme.of(context).colorScheme.surface.withOpacity(0.7)
                 : (roundOwner == true
                     ? Theme.of(context).colorScheme.onPrimary.withOpacity(0.8)
                     : Colors.black.withOpacity(0.3)),
@@ -42,14 +51,16 @@ class CharTile extends StatelessWidget {
           ),
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(children: [
-            OutlinedButton(
-              style: ButtonStyle(
-                  side: MaterialStateProperty.resolveWith<BorderSide?>(
-                      (states) => BorderSide(
-                          color: Theme.of(context).colorScheme.inversePrimary)),
-                  shape: MaterialStateProperty.resolveWith<OutlinedBorder?>(
-                      (states) => const CircleBorder())),
+            // OutlinedButton(
+            //   style: ButtonStyle(
+            //       side: MaterialStateProperty.resolveWith<BorderSide?>(
+            //           (states) => BorderSide(
+            //               color: Theme.of(context).colorScheme.inversePrimary)),
+            //       shape: MaterialStateProperty.resolveWith<OutlinedBorder?>(
+            //           (states) => const CircleBorder())),
+            RoundButton(
               //InkWell(
+              primary: false,
               onPressed: () async {
                 //customBorder: CircleBorder(),
 
@@ -65,22 +76,21 @@ class CharTile extends StatelessWidget {
                   appState.setCharacterInitiativeScore(character, result);
                 }
               },
-              child: SizedBox(
-                height: 58,
-                width: 58,
-                child: Center(
-                  child: Text(
-                    character.initiativeScore.toString(),
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                ),
+              //child: SizedBox(
+              //height: 58,
+              //width: 58,
+              //child: Center(
+              child: Text(
+                character.initiativeScore.toString(),
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
+              //),
+              // ),
             ),
             const SizedBox(width: 20),
             Expanded(
                 child: Text(character.name,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.bodyLarge)),
+                    overflow: TextOverflow.ellipsis, style: textTheme)),
             RectButton(
               primary: false,
               height: 40,
@@ -144,12 +154,12 @@ class _InitiativeDialogState extends State<InitiativeDialog> {
         width: 250,
         height: 200,
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
+          color: Colors.black, // Theme.of(context).colorScheme.surface,
           border: Border.all(
-              color: Theme.of(context).colorScheme.inversePrimary, width: 2),
+              color: Theme.of(context).colorScheme.inversePrimary, width: 1),
           borderRadius: BorderRadius.circular(10),
         ),
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
             TextField(
@@ -165,13 +175,18 @@ class _InitiativeDialogState extends State<InitiativeDialog> {
               textInputAction: TextInputAction.done,
             ),
             const SizedBox(height: 50),
-            RectButton(
-              primary: true,
-              width: 125,
-              onPressed: () {
-                Navigator.of(context).pop(initiativeScore);
-              },
-              child: const Text('OK'),
+            Row(
+              children: [
+                const Spacer(),
+                RectButton(
+                  primary: false,
+                  width: 75,
+                  onPressed: () {
+                    Navigator.of(context).pop(initiativeScore);
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
             ),
           ],
         ),

@@ -4,12 +4,12 @@ import 'dice.dart';
 
 List<Character> getCharacters() {
   return [
-    Character(2, 'Malakay'),
+    Character(3, 'Malakay'),
     //Character(1, 'Black Jack', 18),
-    Character(1, 'Jericho'),
+    Character(2, 'Jericho'),
     Character(1, 'Merlok'),
     //Character(1, 'Durgan'),
-    Character(1, 'Krom')
+    Character(7, 'Krom')
     // Character(2, 'Beholder', 16),
     // Character(1, 'Tarrasque', 17),
     // Character(6, 'Demogorgon', 7),

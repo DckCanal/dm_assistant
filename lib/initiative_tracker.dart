@@ -14,17 +14,17 @@ class InitiativeTracker extends StatelessWidget {
     return Material(
       color: Colors.black,
       child: Column(children: [
-        const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('Personaggi non attivi'),
-            const SizedBox(width: 20),
-            Switch(
-                value: appState.showDisabledChar,
-                onChanged: appState.setDisabledChar),
-          ],
-        ),
+        // const SizedBox(height: 20),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.center,
+        //   children: [
+        //     const Text('Personaggi non attivi'),
+        //     const SizedBox(width: 20),
+        //     Switch(
+        //         value: appState.showDisabledChar,
+        //         onChanged: appState.setDisabledChar),
+        //   ],
+        // ),
         const Expanded(
           child: CharacterList(),
         ),
@@ -46,7 +46,7 @@ class CharacterList extends StatelessWidget {
 
     return LayoutBuilder(builder: (context, constraints) {
       return Container(
-        padding: const EdgeInsets.all(12.0),
+        //padding: const EdgeInsets.symmetric(vertical: 12.0),
         constraints: const BoxConstraints(maxWidth: 800),
         child: ListView.separated(
             key: const PageStorageKey('InitiativeTrackerListView'),

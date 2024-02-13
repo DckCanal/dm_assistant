@@ -19,8 +19,8 @@ class NewCharDialog extends Dialog {
           borderRadius: BorderRadius.circular(10),
         ),
         padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        child: ListView(
+          //mainAxisSize: MainAxisSize.min,
           children: [
             const Text('Nuovo personaggio',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
@@ -34,6 +34,7 @@ class NewCharDialog extends Dialog {
                       name = value;
                     },
                   ),
+                  const SizedBox(height: 15),
                   TextField(
                     decoration:
                         const InputDecoration(labelText: 'Bonus di iniziativa'),
@@ -41,6 +42,7 @@ class NewCharDialog extends Dialog {
                       initiativeBonus = int.tryParse(value) ?? 0;
                     },
                   ),
+                  const SizedBox(height: 15),
                   TextField(
                     decoration: const InputDecoration(
                         labelText: 'Punteggio di iniziativa (opzionale)'),

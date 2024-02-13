@@ -44,99 +44,81 @@ class InitiativeTrackerControlBar extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              RoundButton(
+              // RoundButton(
+              //   primary: false,
+              //   icon: Icon(
+              //     Icons.group_add,
+              //     size: checkConstraint()
+              //         ? secondaryRoundIconBigSize
+              //         : secondaryRoundIconSmallSize,
+              //   ),
+              //   radius: checkConstraint()
+              //       ? secondaryRoundBigRadius
+              //       : secondaryRoundSmallRadius,
+              //   onPressed: () async {
+              //     final result = await showDialog<Character>(
+              //       context: context,
+              //       builder: (context) {
+              //         return const NewCharDialog();
+              //       },
+              //     );
+              //     if (result != null) {
+              //       appState.addCharacter(result.name, result.initiativeBonus,
+              //           result.initiativeScore);
+              //     }
+              //   },
+              // ),
+              RectButton(
+                onPressed: appState.sortCharacters,
                 primary: false,
+                height: checkConstraint() ? rectBigHeight : rectSmallHeight,
+                width: checkConstraint() ? rectBigWidth : rectSmallWidth,
                 icon: Icon(
-                  Icons.group_add,
-                  size: checkConstraint()
-                      ? secondaryRoundIconBigSize
-                      : secondaryRoundIconSmallSize,
+                  Icons.import_export,
+                  color: Colors.white,
+                  size: checkConstraint() ? rectIconBigSize : rectIconSmallSize,
+                  semanticLabel: 'Riordina in base all\'iniziativa',
                 ),
-                radius: checkConstraint()
-                    ? secondaryRoundBigRadius
-                    : secondaryRoundSmallRadius,
-                onPressed: () async {
-                  final result = await showDialog<Character>(
-                    context: context,
-                    builder: (context) {
-                      return const NewCharDialog();
-                    },
-                  );
-                  if (result != null) {
-                    appState.addCharacter(result.name, result.initiativeBonus,
-                        result.initiativeScore);
-                  }
-                },
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  RectButton(
-                    onPressed: appState.sortCharacters,
-                    primary: false,
-                    height: checkConstraint() ? rectBigHeight : rectSmallHeight,
-                    width: checkConstraint() ? rectBigWidth : rectSmallWidth,
-                    icon: Icon(
-                      Icons.import_export,
-                      color: Colors.white,
-                      size: checkConstraint()
-                          ? rectIconBigSize
-                          : rectIconSmallSize,
-                      semanticLabel: 'Riordina in base all\'iniziativa',
-                    ),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: RoundButton(
+                  onPressed: appState.nextTurnOrStartCombat,
+                  primary: true,
+                  radius: checkConstraint()
+                      ? primaryRoundBigRadius
+                      : primaryRoundSmallRadius,
+                  icon: Icon(
+                    appState.inCombat
+                        ? Icons.arrow_forward
+                        : Icons.double_arrow,
+                    color: Colors.white,
+                    size: checkConstraint()
+                        ? primaryRoundIconBigSize
+                        : primaryRoundIconSmallSize,
+                    semanticLabel: (appState.inCombat
+                        ? 'Avanza al prossimo round'
+                        : 'Inizia combattimento'),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: RoundButton(
-                      onPressed: appState.nextTurnOrStartCombat,
-                      primary: true,
-                      radius: checkConstraint()
-                          ? primaryRoundBigRadius
-                          : primaryRoundSmallRadius,
-                      icon: Icon(
-                        appState.inCombat
-                            ? Icons.arrow_forward
-                            : Icons.double_arrow,
-                        color: Colors.white,
-                        size: checkConstraint()
-                            ? primaryRoundIconBigSize
-                            : primaryRoundIconSmallSize,
-                        semanticLabel: (appState.inCombat
-                            ? 'Avanza al prossimo round'
-                            : 'Inizia combattimento'),
-                      ),
-                    ),
-                  ),
-                  RectButton(
-                    onPressed: appState.inCombat ? appState.endCombat : null,
-                    height: checkConstraint() ? rectBigHeight : rectSmallHeight,
-                    width: checkConstraint() ? rectBigWidth : rectSmallWidth,
-                    primary: false,
-                    icon: Icon(
-                      Icons.crop_square,
-                      color: Colors.white,
-                      size: checkConstraint()
-                          ? rectIconBigSize
-                          : rectIconSmallSize,
-                      semanticLabel: 'Esci dal combattimento',
-                    ),
-                  )
-                ],
+                ),
               ),
               RoundButton(
                 primary: false,
                 icon: Icon(
-                  Icons.cyclone,
+                  !appState.inCombat ? Icons.cyclone : Icons.crop_square,
                   size: checkConstraint()
                       ? secondaryRoundIconBigSize
                       : secondaryRoundIconSmallSize,
-                  semanticLabel: "Ritira tutte le iniziative",
+                  semanticLabel: !appState.inCombat
+                      ? "Ritira tutte le iniziative"
+                      : "Esci dal combattimento",
                 ),
                 radius: checkConstraint()
                     ? secondaryRoundBigRadius
                     : secondaryRoundSmallRadius,
-                onPressed:
-                    !appState.inCombat ? appState.rerollInitiative : null,
+                onPressed: !appState.inCombat
+                    ? appState.rerollInitiative
+                    : appState.endCombat,
               ),
             ],
           ),

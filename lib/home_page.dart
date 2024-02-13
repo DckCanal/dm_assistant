@@ -1,11 +1,14 @@
 import 'package:dm_assistant/app_state.dart';
+import 'package:dm_assistant/character.dart';
 // import 'package:dm_assistant/character_view.dart';
 import 'package:dm_assistant/dice_roller.dart';
 import 'package:dm_assistant/initiative_tracker.dart';
+import 'package:dm_assistant/new_char_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
 import 'rect_button.dart';
+import 'app_state.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -71,6 +74,60 @@ class HomePage extends StatelessWidget {
               ],
             ),
           ),
+          drawer: Drawer(
+              backgroundColor: Colors
+                  .black, // Theme.of(context).colorScheme.primaryContainer,
+              // shape: RoundedRectangleBorder(
+              //   borderRadius: BorderRadius.circular(20),
+              //   side: BorderSide(
+              //     color: Theme.of(context).colorScheme.inversePrimary,
+              //     width: 1.0,
+              //   ),
+              // ),
+
+              // shape: Border(
+              //     right: BorderSide(
+              //         width: 1,
+              //         color: Theme.of(context).colorScheme.inversePrimary),
+              //     top: BorderSide(
+              //         width: 1,
+              //         color: Theme.of(context).colorScheme.inversePrimary),
+              //     bottom: BorderSide(
+              //         width: 1,
+              //         color: Theme.of(context).colorScheme.inversePrimary)),
+              child: ListView(children: [
+                ListTile(
+                    trailing: IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )),
+                ListTile(
+                  leading: const Icon(Icons.group_add),
+                  title: const Text("Nuovo personaggio"),
+                  onTap: () async {
+                    Navigator.pop(context);
+                    final result = await showDialog<Character>(
+                      context: context,
+                      builder: (context) {
+                        return const NewCharDialog();
+                      },
+                    );
+                    if (result != null) {
+                      appState.addCharacter(result.name, result.initiativeBonus,
+                          result.initiativeScore);
+                    }
+                  },
+                ),
+                const Divider(),
+                ListTile(
+                  title: const Text("Personaggi non attivi"),
+                  trailing: Switch(
+                      value: appState.showDisabledChar,
+                      onChanged: appState.setDisabledChar),
+                )
+              ])),
           body: const TabBarView(
             children: [
               //const CharacterView(),

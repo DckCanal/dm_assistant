@@ -1,5 +1,3 @@
-import 'package:dm_assistant/character.dart';
-import 'package:dm_assistant/new_char_dialog.dart';
 import 'package:dm_assistant/rect_button.dart';
 import 'package:dm_assistant/round_button.dart';
 import 'package:flutter/material.dart';

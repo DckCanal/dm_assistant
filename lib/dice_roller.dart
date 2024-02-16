@@ -28,6 +28,7 @@ class DicePanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
+    var buttonWidth = 60.0;
     void addRoll(Dice dice) {
       appState.addRollHistoryEntry(
           RollHistoryEntry(roll: RollFormula(dices: [dice]).roll()));
@@ -43,7 +44,7 @@ class DicePanel extends StatelessWidget {
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         RectButton(
           primary: false,
-          width: 90,
+          width: buttonWidth,
           child: const Text('D20'),
           onPressed: () {
             addRoll(Dice.d20);
@@ -51,7 +52,7 @@ class DicePanel extends StatelessWidget {
         ),
         RectButton(
           primary: false,
-          width: 90,
+          width: buttonWidth,
           child: const Text('D100'),
           onPressed: () {
             addRoll(Dice.d100);
@@ -59,7 +60,7 @@ class DicePanel extends StatelessWidget {
         ),
         RectButton(
           primary: false,
-          width: 90,
+          width: buttonWidth,
           child: const Text('D12'),
           onPressed: () {
             addRoll(Dice.d12);
@@ -67,7 +68,7 @@ class DicePanel extends StatelessWidget {
         ),
         RectButton(
           primary: false,
-          width: 90,
+          width: buttonWidth,
           child: const Text('D10'),
           onPressed: () {
             addRoll(Dice.d10);
@@ -75,7 +76,7 @@ class DicePanel extends StatelessWidget {
         ),
         RectButton(
           primary: false,
-          width: 90,
+          width: buttonWidth,
           child: const Text('D8'),
           onPressed: () {
             addRoll(Dice.d8);
@@ -83,7 +84,7 @@ class DicePanel extends StatelessWidget {
         ),
         RectButton(
           primary: false,
-          width: 90,
+          width: buttonWidth,
           child: const Text('D6'),
           onPressed: () {
             addRoll(Dice.d6);
@@ -91,7 +92,7 @@ class DicePanel extends StatelessWidget {
         ),
         RectButton(
           primary: false,
-          width: 90,
+          width: buttonWidth,
           child: const Text('D4'),
           onPressed: () {
             addRoll(Dice.d4);
@@ -132,6 +133,7 @@ class _CustomRollPanelState extends State<CustomRollPanel> {
                 },
               ),
             ),
+            const SizedBox(width: 20),
             RectButton(
               primary: true,
               width: 60,
@@ -168,7 +170,7 @@ class _RollHistoryState extends State<RollHistory> {
       child: Center(
         child: AnimatedList(
           key: _key,
-          reverse: true,
+          reverse: false,
           initialItemCount: rolls.length,
           itemBuilder: (context, index, animation) {
             RollHistoryEntry roll = rolls[index];
@@ -204,7 +206,7 @@ class RollTile extends StatelessWidget {
         style: Theme.of(context).textTheme.bodyMedium);
     return Center(
       child: SizedBox(
-        height: 100,
+        height: 60,
         width: 600,
         child: InkWell(
           onTap: () {

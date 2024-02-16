@@ -160,7 +160,7 @@ class _InitiativeDialogState extends State<InitiativeDialog> {
           borderRadius: BorderRadius.circular(10),
         ),
         padding: const EdgeInsets.all(20.0),
-        child: Column(
+        child: ListView(
           children: [
             TextField(
               decoration: const InputDecoration(labelText: 'Iniziativa'),

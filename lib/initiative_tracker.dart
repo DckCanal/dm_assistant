@@ -10,8 +10,8 @@ class InitiativeTracker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<AppState>();
-    return Material(
+    //var appState = context.watch<AppState>();
+    return const Material(
       color: Colors.black,
       child: Column(children: [
         // const SizedBox(height: 20),
@@ -25,10 +25,10 @@ class InitiativeTracker extends StatelessWidget {
         //         onChanged: appState.setDisabledChar),
         //   ],
         // ),
-        const Expanded(
+        Expanded(
           child: CharacterList(),
         ),
-        const InitiativeTrackerControlBar(),
+        InitiativeTrackerControlBar(),
       ]),
     );
   }

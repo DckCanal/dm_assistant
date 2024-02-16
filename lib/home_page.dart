@@ -1,17 +1,43 @@
 import 'package:dm_assistant/app_state.dart';
-import 'package:dm_assistant/character.dart';
 // import 'package:dm_assistant/character_view.dart';
 import 'package:dm_assistant/dice_roller.dart';
 import 'package:dm_assistant/initiative_tracker.dart';
-import 'package:dm_assistant/new_char_dialog.dart';
+import 'package:dm_assistant/initiative_tracker_navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
 import 'rect_button.dart';
-import 'app_state.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
+  final MAX_WIDTH = 1000;
+
+  Widget? createDrawer(context, constraints) {
+    return constraints.maxWidth < MAX_WIDTH
+        ? Drawer(
+            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+            child: const InitiativeTrackerNavigator(onDrawer: true))
+        : null;
+  }
+
+  Widget createInitiativeTrackerBody(context, constraints) {
+    return constraints.maxWidth < MAX_WIDTH
+        ? const InitiativeTracker()
+        : Row(
+            children: [
+              Container(
+                  width: 300,
+                  decoration: BoxDecoration(
+                      color: Colors.black,
+                      border: Border(
+                          right: BorderSide(
+                              width: 1,
+                              color: Theme.of(context).colorScheme.onPrimary))),
+                  child: const InitiativeTrackerNavigator(onDrawer: false)),
+              const Expanded(child: InitiativeTracker()),
+            ],
+          );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,122 +46,71 @@ class HomePage extends StatelessWidget {
       return DefaultTabController(
         length: 2,
         initialIndex: 0,
-        child: Scaffold(
-          appBar: AppBar(
-            ///elevation: 0,
-            backgroundColor: Colors.black,
-            title: TextButton(
-                onPressed: () async {
-                  final result = await showDialog<String>(
-                      context: context,
-                      builder: (context) {
-                        return CampaignTitleDialog(
-                          oldTitle: appState.campaignTitle,
-                        );
-                      });
-                  if (result != null) {
-                    appState.setCampaignTitle(result);
-                  }
-                },
-                child: Text(appState.campaignTitle)),
-            //  backgroundColor: Colors.black,
-            actions: <Widget>[
-              IconButton(
-                icon: const Icon(Icons.color_lens),
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Scegli un colore'),
-                        content: SingleChildScrollView(
-                          child: BlockPicker(
-                            pickerColor:
-                                appState.userColor ?? appState.defaultColor,
-                            onColorChanged: appState.changeColor,
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ],
-            bottom: TabBar(
-              // indicator: UnderlineTabIndicator(
-              //   borderSide: BorderSide(color: Colors.red, width: 3),
-              // ),
-              dividerColor: Theme.of(context).colorScheme.onPrimary,
-              dividerHeight: 2,
-              tabs: const [
-                //Tab(icon: Icon(Icons.people)),
-                Tab(icon: Icon(Icons.flash_on_outlined)),
-                Tab(icon: Icon(Icons.gamepad)),
-              ],
-            ),
-          ),
-          drawer: Drawer(
-              backgroundColor: Colors
-                  .black, // Theme.of(context).colorScheme.primaryContainer,
-              // shape: RoundedRectangleBorder(
-              //   borderRadius: BorderRadius.circular(20),
-              //   side: BorderSide(
-              //     color: Theme.of(context).colorScheme.inversePrimary,
-              //     width: 1.0,
-              //   ),
-              // ),
-
-              // shape: Border(
-              //     right: BorderSide(
-              //         width: 1,
-              //         color: Theme.of(context).colorScheme.inversePrimary),
-              //     top: BorderSide(
-              //         width: 1,
-              //         color: Theme.of(context).colorScheme.inversePrimary),
-              //     bottom: BorderSide(
-              //         width: 1,
-              //         color: Theme.of(context).colorScheme.inversePrimary)),
-              child: ListView(children: [
-                ListTile(
-                    trailing: IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                )),
-                ListTile(
-                  leading: const Icon(Icons.group_add),
-                  title: const Text("Nuovo personaggio"),
-                  onTap: () async {
-                    Navigator.pop(context);
-                    final result = await showDialog<Character>(
-                      context: context,
-                      builder: (context) {
-                        return const NewCharDialog();
-                      },
-                    );
+        child: LayoutBuilder(builder: (context, constraints) {
+          return Scaffold(
+            appBar: AppBar(
+              ///elevation: 0,
+              backgroundColor: Colors.black,
+              title: TextButton(
+                  onPressed: () async {
+                    final result = await showDialog<String>(
+                        context: context,
+                        builder: (context) {
+                          return CampaignTitleDialog(
+                            oldTitle: appState.campaignTitle,
+                          );
+                        });
                     if (result != null) {
-                      appState.addCharacter(result.name, result.initiativeBonus,
-                          result.initiativeScore);
+                      appState.setCampaignTitle(result);
                     }
                   },
+                  child: Text(appState.campaignTitle)),
+              //  backgroundColor: Colors.black,
+              actions: <Widget>[
+                IconButton(
+                  icon: const Icon(Icons.color_lens),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Scegli un colore'),
+                          content: SingleChildScrollView(
+                            child: BlockPicker(
+                              pickerColor:
+                                  appState.userColor ?? appState.defaultColor,
+                              onColorChanged: appState.changeColor,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
                 ),
-                const Divider(),
-                ListTile(
-                  title: const Text("Personaggi non attivi"),
-                  trailing: Switch(
-                      value: appState.showDisabledChar,
-                      onChanged: appState.setDisabledChar),
-                )
-              ])),
-          body: const TabBarView(
-            children: [
-              //const CharacterView(),
-              InitiativeTracker(),
-              DiceRoller(),
-            ],
-          ),
-        ),
+              ],
+              bottom: TabBar(
+                // indicator: UnderlineTabIndicator(
+                //   borderSide: BorderSide(color: Colors.red, width: 3),
+                // ),
+                dividerColor: Theme.of(context).colorScheme.onPrimary,
+                dividerHeight: 2,
+                tabs: const [
+                  //Tab(icon: Icon(Icons.people)),
+                  Tab(icon: Icon(Icons.flash_on_outlined)),
+                  Tab(icon: Icon(Icons.gamepad)),
+                ],
+              ),
+            ),
+            drawer: createDrawer(context, constraints),
+            body: TabBarView(
+              children: [
+                //const CharacterView(),
+                createInitiativeTrackerBody(context, constraints),
+                const DiceRoller(),
+              ],
+            ),
+          );
+        }),
       );
     });
   }

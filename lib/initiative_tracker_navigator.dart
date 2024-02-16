@@ -17,14 +17,14 @@ class InitiativeTrackerNavigator extends StatelessWidget {
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
     return ListView(children: [
-      if (onDrawer)
-        ListTile(
-            trailing: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        )),
+      // if (onDrawer)
+      //   ListTile(
+      //       trailing: IconButton(
+      //     icon: const Icon(Icons.close),
+      //     onPressed: () {
+      //       Navigator.pop(context);
+      //     },
+      //   )),
       ListTile(
         leading: const Icon(Icons.group_add),
         title: const Text("Nuovo personaggio"),

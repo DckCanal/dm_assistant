@@ -1,5 +1,4 @@
 import 'package:dm_assistant/app_state.dart';
-// import 'package:dm_assistant/character_view.dart';
 import 'package:dm_assistant/dice_roller.dart';
 import 'package:dm_assistant/initiative_tracker.dart';
 import 'package:dm_assistant/initiative_tracker_navigator.dart';
@@ -8,12 +7,13 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
 import 'rect_button.dart';
 
+const maxWidth = 1000;
+
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
-  final MAX_WIDTH = 1000;
 
   Widget? createDrawer(context, constraints) {
-    return constraints.maxWidth < MAX_WIDTH
+    return constraints.maxWidth < maxWidth
         ? Drawer(
             backgroundColor: Theme.of(context).colorScheme.primaryContainer,
             child: const InitiativeTrackerNavigator(onDrawer: true))
@@ -21,7 +21,7 @@ class HomePage extends StatelessWidget {
   }
 
   Widget createInitiativeTrackerBody(context, constraints) {
-    return constraints.maxWidth < MAX_WIDTH
+    return constraints.maxWidth < maxWidth
         ? const InitiativeTracker()
         : Row(
             children: [
@@ -65,7 +65,6 @@ class HomePage extends StatelessWidget {
                     }
                   },
                   child: Text(appState.campaignTitle)),
-              //  backgroundColor: Colors.black,
               actions: <Widget>[
                 IconButton(
                   icon: const Icon(Icons.color_lens),
@@ -89,13 +88,9 @@ class HomePage extends StatelessWidget {
                 ),
               ],
               bottom: TabBar(
-                // indicator: UnderlineTabIndicator(
-                //   borderSide: BorderSide(color: Colors.red, width: 3),
-                // ),
                 dividerColor: Theme.of(context).colorScheme.onPrimary,
                 dividerHeight: 2,
                 tabs: const [
-                  //Tab(icon: Icon(Icons.people)),
                   Tab(icon: Icon(Icons.flash_on_outlined)),
                   Tab(icon: Icon(Icons.gamepad)),
                 ],
@@ -104,7 +99,6 @@ class HomePage extends StatelessWidget {
             drawer: createDrawer(context, constraints),
             body: TabBarView(
               children: [
-                //const CharacterView(),
                 createInitiativeTrackerBody(context, constraints),
                 const DiceRoller(),
               ],

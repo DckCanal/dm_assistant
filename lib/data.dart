@@ -17,6 +17,15 @@ List<Character> getCharacters() {
   ];
 }
 
+List<(RollFormula roll, String title)> getSavedRolls() {
+  return [
+    (RollFormula.fromString("2d6+3d4+1"), "Attacco Ghoul"),
+    (RollFormula.fromString("d20+7"), "Tiro per colpire Vampiro"),
+    (RollFormula.fromString("1d20+5"), "TS DES ladro"),
+    (RollFormula.fromString("3d4+3"), "Dardo incantato")
+  ];
+}
+
 List<RollHistoryEntry> getRolls() {
   return [
     RollHistoryEntry(

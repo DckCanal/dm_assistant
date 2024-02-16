@@ -1,5 +1,6 @@
 import 'package:dm_assistant/app_state.dart';
 import 'package:dm_assistant/dice.dart';
+import 'package:dm_assistant/home_page.dart';
 import 'package:dm_assistant/rect_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,16 +8,28 @@ import 'package:provider/provider.dart';
 class DiceRoller extends StatelessWidget {
   const DiceRoller({super.key});
 
+  Widget mainPanel(context, constraints) {
+    if (constraints.maxWidth < maxWidth) {
+      return const RollHistory();
+    } else {
+      return const Row(
+        children: [SavedRollList(), RollHistory()],
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Material(
-      color: Colors.black,
-      child: Column(children: [
-        Expanded(child: RollHistory()),
-        DicePanel(),
-        CustomRollPanel(),
-      ]),
-    );
+    return LayoutBuilder(builder: (context, constraints) {
+      return Material(
+        color: Colors.black,
+        child: Column(children: [
+          Expanded(child: mainPanel(context, constraints)),
+          const DicePanel(),
+          const CustomRollPanel(),
+        ]),
+      );
+    });
   }
 }
 
@@ -135,11 +148,18 @@ class _CustomRollPanelState extends State<CustomRollPanel> {
             ),
             const SizedBox(width: 20),
             RectButton(
+              primary: false,
+              width: 60,
+              icon: const Icon(Icons.save),
+              onPressed: () {},
+            ),
+            const SizedBox(width: 10),
+            RectButton(
               primary: true,
               width: 60,
               icon: const Icon(Icons.send),
               onPressed: () {},
-            )
+            ),
           ],
         ),
       ),
@@ -165,7 +185,7 @@ class _RollHistoryState extends State<RollHistory> {
     var rolls = appState.rollHistory;
     appState.animatedRollHistoryListKey = _key;
     return Container(
-      constraints: const BoxConstraints(maxWidth: 800),
+      constraints: const BoxConstraints(maxWidth: 700),
       padding: const EdgeInsets.all(12.0),
       child: Center(
         child: AnimatedList(
@@ -249,12 +269,12 @@ class SavedRollList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 500,
+      width: 300,
       decoration: BoxDecoration(
         //color: Colors.black,
         border: Border(
           right: BorderSide(
-              width: 2, color: Theme.of(context).colorScheme.onPrimary),
+              width: 1, color: Theme.of(context).colorScheme.onPrimary),
         ),
       ),
       child: const Center(child: Text('Tiri salvati')),

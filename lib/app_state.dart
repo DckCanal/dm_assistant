@@ -1,11 +1,17 @@
+// import 'dart:js_util';
+
 import 'package:dm_assistant/dice_roller.dart';
 import 'package:flutter/material.dart';
 import 'character.dart';
 import 'dice.dart';
 import 'data.dart';
 
+//enum Page { initiativeTracker, diceRoller }
+
 class AppState extends ChangeNotifier {
+  //var page = Page.initiativeTracker;
   List<Character> characters = getCharacters();
+  List<(RollFormula roll, String title)> savedRolls = getSavedRolls();
   List<RollHistoryEntry> rollHistory = getRolls();
   int currentTurn = 0;
   bool inCombat = false;
@@ -25,6 +31,20 @@ class AppState extends ChangeNotifier {
   void setCampaignTitle(String newTitle) {
     campaignTitle = newTitle;
     notifyListeners();
+  }
+
+  void addSavedRoll(RollFormula rollFormula, String title) {
+    if (!savedRolls.contains((rollFormula, title))) {
+      savedRolls.add((rollFormula, title));
+      notifyListeners();
+    }
+  }
+
+  void removeSavedRoll(RollFormula rollFormula, String title) {
+    if (savedRolls.contains((rollFormula, title))) {
+      savedRolls.remove((rollFormula, title));
+      notifyListeners();
+    }
   }
 
   void addCharacter(String name, int initiativeBonus, [int? initiativeScore]) {

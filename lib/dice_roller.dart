@@ -184,20 +184,17 @@ class _RollHistoryState extends State<RollHistory> {
     var appState = context.watch<AppState>();
     var rolls = appState.rollHistory;
     appState.animatedRollHistoryListKey = _key;
-    return Container(
-      constraints: const BoxConstraints(maxWidth: 700),
-      padding: const EdgeInsets.all(12.0),
-      child: Center(
-        child: AnimatedList(
-          key: _key,
-          reverse: false,
-          initialItemCount: rolls.length,
-          itemBuilder: (context, index, animation) {
-            RollHistoryEntry roll = rolls[index];
-            return SizeTransition(
-                sizeFactor: animation, child: RollTile(roll: roll));
-          },
-        ),
+    return Expanded(
+      child: AnimatedList(
+        key: _key,
+        reverse: false,
+        //shrinkWrap: true,
+        initialItemCount: rolls.length,
+        itemBuilder: (context, index, animation) {
+          RollHistoryEntry roll = rolls[index];
+          return SizeTransition(
+              sizeFactor: animation, child: RollTile(roll: roll));
+        },
       ),
     );
   }
@@ -224,37 +221,33 @@ class RollTile extends StatelessWidget {
     );
     Widget title = Text(roll.title ?? roll.roll.rollFormula,
         style: Theme.of(context).textTheme.bodyMedium);
-    return Center(
-      child: SizedBox(
-        height: 60,
-        width: 600,
-        child: InkWell(
-          onTap: () {
-            appState.addRollHistoryEntry(RollHistoryEntry(
-                roll: RollFormula.fromString(roll.roll.rollFormula).roll(),
-                title: roll.title));
-          },
-          overlayColor: MaterialStateColor.resolveWith((states) {
-            if (states.contains(MaterialState.hovered)) {
-              return Theme.of(context)
-                  .colorScheme
-                  .inversePrimary
-                  .withOpacity(0.7);
-            }
-            return Colors.transparent;
-          }),
-          child: Center(
-            child: ListTile(
-              horizontalTitleGap: 60,
-              leading: leading,
-              title: title,
-              subtitle: roll.title != null
-                  ? Text(roll.roll.rollFormula,
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.inversePrimary))
-                  : null,
-            ),
-          ),
+    return SizedBox(
+      height: 60,
+      //width: 600,
+      child: InkWell(
+        onTap: () {
+          appState.addRollHistoryEntry(RollHistoryEntry(
+              roll: RollFormula.fromString(roll.roll.rollFormula).roll(),
+              title: roll.title));
+        },
+        overlayColor: MaterialStateColor.resolveWith((states) {
+          if (states.contains(MaterialState.hovered)) {
+            return Theme.of(context)
+                .colorScheme
+                .inversePrimary
+                .withOpacity(0.7);
+          }
+          return Colors.transparent;
+        }),
+        child: ListTile(
+          horizontalTitleGap: 60,
+          leading: leading,
+          title: title,
+          subtitle: roll.title != null
+              ? Text(roll.roll.rollFormula,
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.inversePrimary))
+              : null,
         ),
       ),
     );
@@ -281,13 +274,24 @@ class SavedRollList extends StatelessWidget {
       ),
       child: ListView(
         children: savedRolls.map((savedRoll) {
-          return ListTile(
-            title: Text(savedRoll.$2),
-            subtitle: Text(savedRoll.$1.toString()),
+          return InkWell(
+            overlayColor: MaterialStateColor.resolveWith((states) {
+              if (states.contains(MaterialState.hovered)) {
+                return Theme.of(context)
+                    .colorScheme
+                    .inversePrimary
+                    .withOpacity(0.7);
+              }
+              return Colors.transparent;
+            }),
             onTap: () {
               appState.addRollHistoryEntry(RollHistoryEntry(
                   roll: savedRoll.$1.roll(), title: savedRoll.$2));
             },
+            child: ListTile(
+              title: Text(savedRoll.$2),
+              subtitle: Text(savedRoll.$1.toString()),
+            ),
           );
         }).toList(),
       ),

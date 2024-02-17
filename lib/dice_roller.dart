@@ -268,6 +268,8 @@ class SavedRollList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appState = context.watch<AppState>();
+    var savedRolls = appState.savedRolls;
     return Container(
       width: 300,
       decoration: BoxDecoration(
@@ -277,7 +279,18 @@ class SavedRollList extends StatelessWidget {
               width: 1, color: Theme.of(context).colorScheme.onPrimary),
         ),
       ),
-      child: const Center(child: Text('Tiri salvati')),
+      child: ListView(
+        children: savedRolls.map((savedRoll) {
+          return ListTile(
+            title: Text(savedRoll.$2),
+            subtitle: Text(savedRoll.$1.toString()),
+            onTap: () {
+              appState.addRollHistoryEntry(RollHistoryEntry(
+                  roll: savedRoll.$1.roll(), title: savedRoll.$2));
+            },
+          );
+        }).toList(),
+      ),
     );
   }
 }

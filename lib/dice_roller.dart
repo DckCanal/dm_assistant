@@ -127,8 +127,13 @@ class CustomRollPanel extends StatefulWidget {
 
 class _CustomRollPanelState extends State<CustomRollPanel> {
   String rollString = '';
+  bool isValid() {
+    return RollFormula.isValid(rollString);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final appState = context.watch<AppState>();
     return Material(
       color: Colors.black,
       child: Padding(
@@ -151,14 +156,20 @@ class _CustomRollPanelState extends State<CustomRollPanel> {
               primary: false,
               width: 60,
               icon: const Icon(Icons.save),
-              onPressed: () {},
+              onPressed: isValid() ? () {} : null,
             ),
             const SizedBox(width: 10),
             RectButton(
               primary: true,
               width: 60,
               icon: const Icon(Icons.send),
-              onPressed: () {},
+              onPressed: isValid()
+                  ? () {
+                      appState.addRollHistoryEntry(RollHistoryEntry(
+                        roll: RollFormula.fromString(rollString).roll(),
+                      ));
+                    }
+                  : null,
             ),
           ],
         ),
@@ -289,7 +300,13 @@ class SavedRollList extends StatelessWidget {
                   roll: savedRoll.$1.roll(), title: savedRoll.$2));
             },
             child: ListTile(
-              title: Text(savedRoll.$2),
+              title: Text(
+                savedRoll.$2,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.copyWith(color: Theme.of(context).colorScheme.primary),
+              ),
               subtitle: Text(savedRoll.$1.toString()),
             ),
           );

@@ -1,6 +1,5 @@
 import 'package:dm_assistant/app_state.dart';
 import 'package:dm_assistant/dice.dart';
-import 'package:dm_assistant/home_page.dart';
 import 'package:dm_assistant/rect_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,11 +8,11 @@ class DiceRoller extends StatelessWidget {
   const DiceRoller({super.key});
 
   Widget mainPanel(context, constraints) {
-    if (constraints.maxWidth < maxWidth) {
+    if (constraints.maxWidth < 602) {
       return const RollHistory();
     } else {
       return const Row(
-        children: [SavedRollList(), RollHistory()],
+        children: [SavedRollList(), Expanded(child: RollHistory())],
       );
     }
   }
@@ -201,18 +200,16 @@ class _RollHistoryState extends State<RollHistory> {
     var appState = context.watch<AppState>();
     var rolls = appState.rollHistory;
     appState.animatedRollHistoryListKey = _key;
-    return Expanded(
-      child: AnimatedList(
-        key: _key,
-        reverse: false,
-        //shrinkWrap: true,
-        initialItemCount: rolls.length,
-        itemBuilder: (context, index, animation) {
-          RollHistoryEntry roll = rolls[index];
-          return SizeTransition(
-              sizeFactor: animation, child: RollTile(roll: roll));
-        },
-      ),
+    return AnimatedList(
+      key: _key,
+      reverse: false,
+      //shrinkWrap: true,
+      initialItemCount: rolls.length,
+      itemBuilder: (context, index, animation) {
+        RollHistoryEntry roll = rolls[index];
+        return SizeTransition(
+            sizeFactor: animation, child: RollTile(roll: roll));
+      },
     );
   }
 }

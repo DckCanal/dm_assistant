@@ -183,12 +183,12 @@ class RollFormula {
     return formula;
   }
 
-  static bool isValid(String formula) {
-    RegExp validFormulaRegExp =
-        RegExp(r'^(\d*d\d+\s*\+\s*)*\d*d\d+(\s*[\+\-]\s*\d+)?$');
+  // static bool isValid(String formula) {
+  //   RegExp validFormulaRegExp =
+  //       RegExp(r'^(\d*d\d+\s*\+\s*)*\d*d\d+(\s*[\+\-]\s*\d+)?$');
 
-    return validFormulaRegExp.hasMatch(formula);
-  }
+  //   return validFormulaRegExp.hasMatch(formula);
+  // }
 
   static String compactFormula(String formula) {
     // Split della formula in base al carattere '+'

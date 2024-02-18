@@ -128,7 +128,13 @@ class CustomRollPanel extends StatefulWidget {
 class _CustomRollPanelState extends State<CustomRollPanel> {
   String rollString = '';
   bool isValid() {
-    return RollFormula.isValid(rollString);
+    //return RollFormula.isValid(rollString);
+    try {
+      RollFormula.fromString(rollString);
+      return true;
+    } catch (diceParseException) {
+      return false;
+    }
   }
 
   @override

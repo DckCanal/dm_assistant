@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dm_assistant/app_state.dart';
 import 'package:dm_assistant/dice_roller.dart';
 import 'package:dm_assistant/initiative_tracker.dart';
@@ -6,18 +8,53 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
 import 'rect_button.dart';
+import 'dice_roller.dart';
 
 const maxWidth = 1000;
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
-  Widget? createDrawer(context, constraints) {
-    return constraints.maxWidth < maxWidth
-        ? Drawer(
-            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-            child: const InitiativeTrackerNavigator(onDrawer: true))
-        : null;
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  late ValueNotifier<int> _currentTabIndexNotifier;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    _currentTabIndexNotifier = ValueNotifier<int>(_tabController.index);
+    _tabController.addListener(() {
+      _currentTabIndexNotifier.value = _tabController.index;
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  Widget? _createDrawer(context, constraints) {
+    if (constraints.maxWidth >= maxWidth) {
+      return null;
+    } else {
+      return ValueListenableBuilder<int>(
+        valueListenable: _currentTabIndexNotifier,
+        builder: (context, currentTabIndex, child) {
+          return Drawer(
+              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+              child: currentTabIndex == 0
+                  ? const InitiativeTrackerNavigator(onDrawer: true)
+                  : const SavedRollList());
+        },
+      );
+    }
   }
 
   Widget createInitiativeTrackerBody(context, constraints) {
@@ -90,14 +127,16 @@ class HomePage extends StatelessWidget {
               bottom: TabBar(
                 dividerColor: Theme.of(context).colorScheme.onPrimary,
                 dividerHeight: 2,
+                controller: _tabController,
                 tabs: const [
                   Tab(icon: Icon(Icons.flash_on_outlined)),
                   Tab(icon: Icon(Icons.gamepad)),
                 ],
               ),
             ),
-            drawer: createDrawer(context, constraints),
+            drawer: _createDrawer(context, constraints),
             body: TabBarView(
+              controller: _tabController,
               children: [
                 createInitiativeTrackerBody(context, constraints),
                 const DiceRoller(),

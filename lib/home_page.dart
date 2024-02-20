@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:dm_assistant/app_state.dart';
 import 'package:dm_assistant/dice_roller.dart';
 import 'package:dm_assistant/initiative_tracker.dart';
@@ -8,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
 import 'rect_button.dart';
-import 'dice_roller.dart';
 
 const maxWidth = 1000;
 
@@ -51,7 +48,9 @@ class _HomePageState extends State<HomePage>
               backgroundColor: Theme.of(context).colorScheme.primaryContainer,
               child: currentTabIndex == 0
                   ? const InitiativeTrackerNavigator(onDrawer: true)
-                  : const SavedRollList());
+                  : const SavedRollList(
+                      onDrawer: true,
+                    ));
         },
       );
     }

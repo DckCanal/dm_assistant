@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:dm_assistant/app_state.dart';
 import 'package:dm_assistant/dice.dart';
 import 'package:dm_assistant/rect_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 class DiceRoller extends StatelessWidget {
@@ -37,14 +40,102 @@ class DicePanel extends StatelessWidget {
     super.key,
   });
 
+  final buttonWidth = 60.0;
+
+  Widget _d20(addRoll) {
+    return RectButton(
+      primary: false,
+      width: buttonWidth,
+      child: const Text('D20'),
+      onPressed: () {
+        addRoll(Dice.d20);
+      },
+    );
+  }
+
+  Widget _d100(addRoll) {
+    return RectButton(
+      primary: false,
+      width: buttonWidth,
+      child: const Text('D100'),
+      onPressed: () {
+        addRoll(Dice.d100);
+      },
+    );
+  }
+
+  Widget _d12(addRoll) {
+    return RectButton(
+      primary: false,
+      width: buttonWidth,
+      child: const Text('D12'),
+      onPressed: () {
+        addRoll(Dice.d12);
+      },
+    );
+  }
+
+  Widget _d10(addRoll) {
+    return RectButton(
+      primary: false,
+      width: buttonWidth,
+      child: const Text('D10'),
+      onPressed: () {
+        addRoll(Dice.d10);
+      },
+    );
+  }
+
+  Widget _d8(addRoll) {
+    return RectButton(
+      primary: false,
+      width: buttonWidth,
+      child: const Text('D8'),
+      onPressed: () {
+        addRoll(Dice.d8);
+      },
+    );
+  }
+
+  Widget _d6(addRoll) {
+    return RectButton(
+      primary: false,
+      width: buttonWidth,
+      child: const Text('D6'),
+      onPressed: () {
+        addRoll(Dice.d6);
+      },
+    );
+  }
+
+  Widget _d4(addRoll) {
+    return RectButton(
+      primary: false,
+      width: buttonWidth,
+      child: const Text('D4'),
+      onPressed: () {
+        addRoll(Dice.d4);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
-    var buttonWidth = 60.0;
     void addRoll(Dice dice) {
       appState.addRollHistoryEntry(
           RollHistoryEntry(roll: RollFormula(dices: [dice]).roll()));
     }
+
+    List<Widget> diceList = [
+      _d20(addRoll),
+      _d100(addRoll),
+      _d12(addRoll),
+      _d10(addRoll),
+      _d8(addRoll),
+      _d6(addRoll),
+      _d4(addRoll),
+    ];
 
     return Container(
       padding: const EdgeInsets.all(12),
@@ -53,64 +144,35 @@ class DicePanel extends StatelessWidget {
           border: Border(
               top: BorderSide(
                   width: 2, color: Theme.of(context).colorScheme.onPrimary))),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        RectButton(
-          primary: false,
-          width: buttonWidth,
-          child: const Text('D20'),
-          onPressed: () {
-            addRoll(Dice.d20);
-          },
-        ),
-        RectButton(
-          primary: false,
-          width: buttonWidth,
-          child: const Text('D100'),
-          onPressed: () {
-            addRoll(Dice.d100);
-          },
-        ),
-        RectButton(
-          primary: false,
-          width: buttonWidth,
-          child: const Text('D12'),
-          onPressed: () {
-            addRoll(Dice.d12);
-          },
-        ),
-        RectButton(
-          primary: false,
-          width: buttonWidth,
-          child: const Text('D10'),
-          onPressed: () {
-            addRoll(Dice.d10);
-          },
-        ),
-        RectButton(
-          primary: false,
-          width: buttonWidth,
-          child: const Text('D8'),
-          onPressed: () {
-            addRoll(Dice.d8);
-          },
-        ),
-        RectButton(
-          primary: false,
-          width: buttonWidth,
-          child: const Text('D6'),
-          onPressed: () {
-            addRoll(Dice.d6);
-          },
-        ),
-        RectButton(
-          primary: false,
-          width: buttonWidth,
-          child: const Text('D4'),
-          onPressed: () {
-            addRoll(Dice.d4);
-          },
-        ),
-      ]),
+      child: LayoutBuilder(builder: (context, constraints) {
+        if (constraints.maxWidth > 450) {
+          return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: diceList);
+        } else if (Platform.isAndroid) {
+          return SizedBox(
+            height: 46,
+            child:
+                ListView(scrollDirection: Axis.horizontal, children: diceList),
+          );
+        } else {
+          return SizedBox(
+              height: 110,
+              child: Column(children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: diceList.sublist(0, 4),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: diceList.sublist(4, 7),
+                )
+              ]));
+        }
+      }),
     );
   }
 }
@@ -161,7 +223,19 @@ class _CustomRollPanelState extends State<CustomRollPanel> {
               primary: false,
               width: 60,
               icon: const Icon(Icons.save),
-              onPressed: isValid() ? () {} : null,
+              onPressed: isValid()
+                  ? () async {
+                      final result = await showDialog<String>(
+                          context: context,
+                          builder: (context) {
+                            return const NewRollDialog();
+                          });
+                      if (result != null) {
+                        appState.addSavedRoll(
+                            RollFormula.fromString(rollString), result);
+                      }
+                    }
+                  : null,
             ),
             const SizedBox(width: 10),
             RectButton(
@@ -180,6 +254,72 @@ class _CustomRollPanelState extends State<CustomRollPanel> {
         ),
       ),
     );
+  }
+}
+
+class NewRollDialog extends StatefulWidget {
+  const NewRollDialog({
+    super.key,
+  });
+
+  @override
+  State<NewRollDialog> createState() => _NewRollDialogState();
+}
+
+class _NewRollDialogState extends State<NewRollDialog> {
+  String? rollTitle;
+  FocusNode focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).requestFocus(focusNode);
+    });
+  }
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+        child: Container(
+            width: 300,
+            height: 200,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              border: Border.all(
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                  width: 2),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                TextField(
+                  onChanged: (value) {
+                    rollTitle = value;
+                  },
+                  onSubmitted: (value) {
+                    Navigator.of(context).pop(rollTitle);
+                  },
+                  focusNode: focusNode,
+                  textInputAction: TextInputAction.done,
+                ),
+                const SizedBox(height: 50),
+                RectButton(
+                    primary: true,
+                    width: 125,
+                    onPressed: () {
+                      Navigator.of(context).pop(rollTitle);
+                    },
+                    child: const Text('Salva'))
+              ],
+            )));
   }
 }
 
@@ -270,8 +410,11 @@ class RollTile extends StatelessWidget {
 
 class SavedRollList extends StatelessWidget {
   const SavedRollList({
+    this.onDrawer = false,
     super.key,
   });
+
+  final bool onDrawer;
 
   @override
   Widget build(BuildContext context) {
@@ -299,6 +442,9 @@ class SavedRollList extends StatelessWidget {
               return Colors.transparent;
             }),
             onTap: () {
+              if (onDrawer) {
+                Navigator.pop(context);
+              }
               appState.addRollHistoryEntry(RollHistoryEntry(
                   roll: savedRoll.$1.roll(), title: savedRoll.$2));
             },
@@ -311,6 +457,12 @@ class SavedRollList extends StatelessWidget {
                     ?.copyWith(color: Theme.of(context).colorScheme.primary),
               ),
               subtitle: Text(savedRoll.$1.toString()),
+              trailing: IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () {
+                  appState.removeSavedRoll(savedRoll.$1, savedRoll.$2);
+                },
+              ),
             ),
           );
         }).toList(),

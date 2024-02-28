@@ -4,7 +4,6 @@ import 'package:dm_assistant/app_state.dart';
 import 'package:dm_assistant/dice.dart';
 import 'package:dm_assistant/rect_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 class DiceRoller extends StatelessWidget {

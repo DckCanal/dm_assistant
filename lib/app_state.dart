@@ -6,7 +6,6 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import 'character.dart';
 import 'dice.dart';
 import 'data.dart';
-import 'dart:io';
 
 //enum Page { initiativeTracker, diceRoller }
 

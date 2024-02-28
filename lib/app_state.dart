@@ -2,9 +2,11 @@
 
 import 'package:dm_assistant/dice_roller.dart';
 import 'package:flutter/material.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 import 'character.dart';
 import 'dice.dart';
 import 'data.dart';
+import 'dart:io';
 
 //enum Page { initiativeTracker, diceRoller }
 
@@ -141,6 +143,7 @@ class AppState extends ChangeNotifier {
         }
       }
     } else {
+      WakelockPlus.enable();
       _sortCharacters();
       scrollController.animateTo(0,
           duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
@@ -152,6 +155,8 @@ class AppState extends ChangeNotifier {
   void endCombat() {
     inCombat = false;
     currentTurn = 0;
+
+    WakelockPlus.disable();
     notifyListeners();
   }
 

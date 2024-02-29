@@ -2,12 +2,29 @@
 
 import 'package:dm_assistant/dice_roller.dart';
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'character.dart';
 import 'dice.dart';
 import 'data.dart';
 
 //enum Page { initiativeTracker, diceRoller }
+
+class Campaign {
+  Id id = Isar.autoIncrement;
+  List<Character> characters;
+  List<(RollFormula roll, String title)> savedRolls;
+  String title;
+
+  Color color = const Color.fromARGB(255, 13, 0, 133);
+  bool showDisabledChar = false;
+
+  Campaign({
+    required this.title,
+    required this.characters,
+    required this.savedRolls,
+  });
+}
 
 class AppState extends ChangeNotifier {
   //var page = Page.initiativeTracker;

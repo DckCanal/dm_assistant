@@ -12,42 +12,74 @@ import 'data.dart';
 
 class Campaign {
   Id id = Isar.autoIncrement;
+
+  // Game data
   List<Character> characters;
   List<(RollFormula roll, String title)> savedRolls;
+  List<RollHistoryEntry> rollHistory;
   String title;
 
-  Color color = const Color.fromARGB(255, 13, 0, 133);
+  // Settings
+  Color color;
   bool showDisabledChar = false;
+  bool inCombat;
+  int currentTurn;
 
-  Campaign({
-    required this.title,
-    required this.characters,
-    required this.savedRolls,
-  });
+  Campaign(
+      {required this.title,
+      required this.characters,
+      required this.savedRolls,
+      required this.rollHistory,
+      this.color = const Color.fromARGB(255, 13, 0, 133),
+      this.showDisabledChar = false,
+      this.inCombat = false,
+      this.currentTurn = 0});
 }
 
 class AppState extends ChangeNotifier {
   //var page = Page.initiativeTracker;
-  List<Character> characters = getCharacters();
-  List<(RollFormula roll, String title)> savedRolls = getSavedRolls();
-  List<RollHistoryEntry> rollHistory = getRolls();
-  int currentTurn = 0;
-  bool inCombat = false;
-  final ScrollController scrollController = ScrollController();
-  final Color defaultColor = const Color.fromARGB(255, 13, 0, 133);
-  Color? userColor;
-  String campaignTitle = 'Kraken bay';
-  bool showDisabledChar = false;
+  final List<Campaign> _campaigns = [
+    Campaign(
+        characters: getCharacters(),
+        savedRolls: getSavedRolls(),
+        rollHistory: getRolls(),
+        title: "Kraken bay"),
+    Campaign(
+        characters: getCharacters2(),
+        savedRolls: getSavedRolls2(),
+        rollHistory: getRolls2(),
+        title: "Malvagi")
+  ];
+  int _campaignIndex = 0;
+  Campaign get _c => _campaigns[_campaignIndex];
 
+  List<Character> get characters => _c.characters;
+  List<(RollFormula roll, String title)> get savedRolls => _c.savedRolls;
+  List<RollHistoryEntry> get rollHistory => _c.rollHistory;
+  String get campaignTitle => _c.title;
+  Color get userColor => _c.color;
+
+  int get currentTurn => _c.currentTurn;
+  bool get inCombat => _c.inCombat;
+  bool get showDisabledChar => _c.showDisabledChar;
+  //final Color defaultColor = const Color.fromARGB(255, 13, 0, 133);
+
+  ScrollController scrollController = ScrollController();
   GlobalKey? animatedRollHistoryListKey;
 
+  void changeCampaign(int newCampaignIndex) {
+    _campaignIndex = newCampaignIndex;
+    scrollController = ScrollController();
+    notifyListeners();
+  }
+
   void setDisabledChar(bool newValue) {
-    showDisabledChar = newValue;
+    _c.showDisabledChar = newValue;
     notifyListeners();
   }
 
   void setCampaignTitle(String newTitle) {
-    campaignTitle = newTitle;
+    _c.title = newTitle;
     notifyListeners();
   }
 
@@ -67,20 +99,21 @@ class AppState extends ChangeNotifier {
 
   void addCharacter(String name, int initiativeBonus, [int? initiativeScore]) {
     characters.add(Character(initiativeBonus, name, initiativeScore));
-    if (inCombat) {
-      Character roundOwner = characters[currentTurn];
+    if (_c.inCombat) {
+      Character roundOwner = characters[_c.currentTurn];
       _sortCharacters();
-      currentTurn = characters.indexOf(roundOwner);
+      _c.currentTurn = characters.indexOf(roundOwner);
     }
     notifyListeners();
   }
 
   void removeCharacter(Character character) {
     int index = characters.indexOf(character);
-    if (index < currentTurn) {
-      currentTurn--;
-    } else if (index == currentTurn && currentTurn == characters.length - 1) {
-      currentTurn = 0;
+    if (index < _c.currentTurn) {
+      _c.currentTurn--;
+    } else if (index == _c.currentTurn &&
+        _c.currentTurn == characters.length - 1) {
+      _c.currentTurn = 0;
     }
     characters.remove(character);
     notifyListeners();
@@ -88,20 +121,21 @@ class AppState extends ChangeNotifier {
 
   void enableCharacter(Character character) {
     character.enabled = true;
-    if (inCombat) {
-      Character roundOwner = characters[currentTurn];
+    if (_c.inCombat) {
+      Character roundOwner = characters[_c.currentTurn];
       _sortCharacters();
-      currentTurn = characters.indexOf(roundOwner);
+      _c.currentTurn = characters.indexOf(roundOwner);
     }
     notifyListeners();
   }
 
   void disableCharacter(Character character) {
     int index = characters.indexOf(character);
-    if (index < currentTurn) {
-      currentTurn--;
-    } else if (index == currentTurn && currentTurn == characters.length - 1) {
-      currentTurn = 0;
+    if (index < _c.currentTurn) {
+      _c.currentTurn--;
+    } else if (index == _c.currentTurn &&
+        _c.currentTurn == characters.length - 1) {
+      _c.currentTurn = 0;
     }
     character.enabled = false;
     _sortCharacters();
@@ -111,14 +145,14 @@ class AppState extends ChangeNotifier {
   void setRoundOwner(Character character) {
     int newTurnIndex = characters.indexOf(character);
     if (newTurnIndex != -1) {
-      currentTurn = newTurnIndex;
+      _c.currentTurn = newTurnIndex;
       notifyListeners();
     }
   }
 
   void setCharacterInitiativeScore(Character character, int initiativeScore) {
     character.initiativeScore = initiativeScore;
-    if (inCombat) {
+    if (_c.inCombat) {
       _sortCharacters();
     }
     notifyListeners();
@@ -143,16 +177,16 @@ class AppState extends ChangeNotifier {
   }
 
   void nextTurnOrStartCombat() {
-    if (inCombat) {
+    if (_c.inCombat) {
       if (characters.every((element) => element.enabled == false)) {
         endCombat();
       } else {
-        currentTurn = (currentTurn + 1) % characters.length;
-        if (characters[currentTurn].enabled == false) {
+        _c.currentTurn = (_c.currentTurn + 1) % characters.length;
+        if (characters[_c.currentTurn].enabled == false) {
           nextTurnOrStartCombat();
         } else {
           scrollController.animateTo(
-            currentTurn * 82,
+            _c.currentTurn * 82,
             duration: const Duration(milliseconds: 500),
             curve: Curves.easeInOut,
           );
@@ -163,14 +197,14 @@ class AppState extends ChangeNotifier {
       _sortCharacters();
       scrollController.animateTo(0,
           duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
-      inCombat = true;
+      _c.inCombat = true;
     }
     notifyListeners();
   }
 
   void endCombat() {
-    inCombat = false;
-    currentTurn = 0;
+    _c.inCombat = false;
+    _c.currentTurn = 0;
 
     WakelockPlus.disable();
     notifyListeners();
@@ -180,14 +214,14 @@ class AppState extends ChangeNotifier {
     for (Character character in characters) {
       character.rollInitiative();
     }
-    if (inCombat) {
+    if (_c.inCombat) {
       _sortCharacters();
     }
     notifyListeners();
   }
 
   void changeColor(Color color) {
-    userColor = color;
+    _c.color = color;
     notifyListeners();
   }
 

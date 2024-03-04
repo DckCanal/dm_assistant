@@ -31,8 +31,7 @@ class MainComponent extends StatelessWidget {
       title: 'DM Assistant',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-            seedColor: appState.userColor ?? appState.defaultColor,
-            brightness: Brightness.dark),
+            seedColor: appState.userColor, brightness: Brightness.dark),
         useMaterial3: true,
       ),
       home: const HomePage(),

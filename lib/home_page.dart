@@ -112,8 +112,7 @@ class _HomePageState extends State<HomePage>
                           title: const Text('Scegli un colore'),
                           content: SingleChildScrollView(
                             child: BlockPicker(
-                              pickerColor:
-                                  appState.userColor ?? appState.defaultColor,
+                              pickerColor: appState.userColor,
                               onColorChanged: appState.changeColor,
                             ),
                           ),

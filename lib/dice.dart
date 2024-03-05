@@ -98,6 +98,11 @@ class Roll {
     return formula;
   }
 
+  @override
+  String toString() {
+    return rollFormula;
+  }
+
   Roll({required this.diceRolls, this.modifier = 0});
 }
 
@@ -257,6 +262,11 @@ class RollHistoryEntry {
   final Roll roll;
   final String? title;
   RollHistoryEntry({required this.roll, this.title});
+
+  @override
+  String toString() {
+    return '$title: ${roll.toString()}';
+  }
 }
 
 class DiceParseException implements Exception {

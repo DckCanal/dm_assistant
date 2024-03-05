@@ -89,15 +89,15 @@ class _HomePageState extends State<HomePage>
               backgroundColor: Colors.black,
               title: TextButton(
                   onPressed: () async {
-                    final result = await showDialog<String>(
+                    final result = await showDialog<int>(
                         context: context,
                         builder: (context) {
                           return CampaignTitleDialog(
-                            oldTitle: appState.campaignTitle,
+                            campaigns: appState.campaigns,
                           );
                         });
                     if (result != null) {
-                      appState.setCampaignTitle(result);
+                      appState.changeCampaign(result);
                     }
                   },
                   child: Text(appState.campaignTitle)),
@@ -148,23 +148,24 @@ class _HomePageState extends State<HomePage>
 }
 
 class CampaignTitleDialog extends StatefulWidget {
-  final String oldTitle;
+  //final String oldTitle;
+  final List<Campaign> campaigns;
 
-  const CampaignTitleDialog({required this.oldTitle, super.key});
+  const CampaignTitleDialog({required this.campaigns, super.key});
   @override
   _CampaignTitleDialogState createState() => _CampaignTitleDialogState();
 }
 
 class _CampaignTitleDialogState extends State<CampaignTitleDialog> {
-  String? newTitle;
-  FocusNode focusNode = FocusNode();
+  //String? newTitle;
+  //FocusNode focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      FocusScope.of(context).requestFocus(focusNode);
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   FocusScope.of(context).requestFocus(focusNode);
+    // });
   }
 
   @override
@@ -180,27 +181,36 @@ class _CampaignTitleDialogState extends State<CampaignTitleDialog> {
           borderRadius: BorderRadius.circular(10),
         ),
         padding: const EdgeInsets.all(8.0),
-        child: Column(
+        child: ListView(
           children: [
-            TextField(
-              onChanged: (value) {
-                newTitle = value != '' ? value : widget.oldTitle;
-              },
-              onSubmitted: (value) {
-                Navigator.of(context).pop(newTitle);
-              },
-              focusNode: focusNode,
-              textInputAction: TextInputAction.done,
-            ),
-            const SizedBox(height: 50),
-            RectButton(
-              primary: true,
-              width: 125,
-              onPressed: () {
-                Navigator.of(context).pop(newTitle);
-              },
-              child: const Text('OK'),
-            ),
+            for (Campaign c in widget.campaigns)
+              TextButton(
+                child: Text(c.title),
+                onPressed: () =>
+                    {Navigator.of(context).pop(widget.campaigns.indexOf(c))},
+              ),
+            // widget.campaigns.map(c => {
+            //   return TextButton();
+            // }).toList();
+            // TextField(
+            //   onChanged: (value) {
+            //     newTitle = value != '' ? value : widget.oldTitle;
+            //   },
+            //   onSubmitted: (value) {
+            //     Navigator.of(context).pop(newTitle);
+            //   },
+            //   //focusNode: focusNode,
+            //   textInputAction: TextInputAction.done,
+            // ),
+            // const SizedBox(height: 50),
+            // RectButton(
+            //   primary: true,
+            //   width: 125,
+            //   onPressed: () {
+            //     Navigator.of(context).pop(newTitle);
+            //   },
+            //   child: const Text('OK'),
+            // ),
           ],
         ),
       ),
@@ -209,7 +219,7 @@ class _CampaignTitleDialogState extends State<CampaignTitleDialog> {
 
   @override
   void dispose() {
-    focusNode.dispose();
+    //focusNode.dispose();
     super.dispose();
   }
 }

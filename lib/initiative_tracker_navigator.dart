@@ -25,30 +25,30 @@ class InitiativeTrackerNavigator extends StatelessWidget {
       //       Navigator.pop(context);
       //     },
       //   )),
-      ListTile(
-        leading: const Icon(Icons.group_add),
-        title: const Text("Nuovo personaggio"),
-        onTap: () async {
-          if (onDrawer) {
-            Navigator.pop(context);
-          }
-          final result = await showDialog<Character>(
-            context: context,
-            builder: (context) {
-              return const NewCharDialog();
-            },
-          );
-          if (result != null) {
-            appState.addCharacter(
-                result.name, result.initiativeBonus, result.initiativeScore);
-          }
-        },
-      ),
-      if (onDrawer)
-        Divider(
-            color: onDrawer
-                ? Theme.of(context).colorScheme.onPrimaryContainer
-                : Theme.of(context).colorScheme.onPrimary),
+      // ListTile(
+      //   leading: const Icon(Icons.group_add),
+      //   title: const Text("Nuovo personaggio"),
+      //   onTap: () async {
+      //     if (onDrawer) {
+      //       Navigator.pop(context);
+      //     }
+      //     final result = await showDialog<Character>(
+      //       context: context,
+      //       builder: (context) {
+      //         return const NewCharDialog();
+      //       },
+      //     );
+      //     if (result != null) {
+      //       appState.addCharacter(
+      //           result.name, result.initiativeBonus, result.initiativeScore);
+      //     }
+      //   },
+      // ),
+      // if (onDrawer)
+      //   Divider(
+      //       color: onDrawer
+      //           ? Theme.of(context).colorScheme.onPrimaryContainer
+      //           : Theme.of(context).colorScheme.onPrimary),
       ListTile(
         title: const Text("Personaggi non attivi"),
         trailing: Switch(

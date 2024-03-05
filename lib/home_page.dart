@@ -1,11 +1,12 @@
 import 'package:dm_assistant/app_state.dart';
+import 'package:dm_assistant/character.dart';
 import 'package:dm_assistant/dice_roller.dart';
 import 'package:dm_assistant/initiative_tracker.dart';
 import 'package:dm_assistant/initiative_tracker_navigator.dart';
+import 'package:dm_assistant/new_char_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
-import 'rect_button.dart';
 
 const maxWidth = 1000;
 
@@ -54,6 +55,39 @@ class _HomePageState extends State<HomePage>
         },
       );
     }
+  }
+
+  Widget? _createFAB({onResult}) {
+    return ValueListenableBuilder<int>(
+        valueListenable: _currentTabIndexNotifier,
+        builder: (context, currentTabIndex, child) {
+          if (currentTabIndex != 0) {
+            return Container();
+          } else {
+            return LayoutBuilder(builder: (context, constraints) {
+              double screenHeight = MediaQuery.of(context).size.height;
+              double maxWidth = constraints.maxWidth;
+              bool checkConstraint() => maxWidth >= 600 && screenHeight >= 800;
+              return Padding(
+                padding: EdgeInsets.symmetric(
+                    vertical: checkConstraint() ? 150 : 110, horizontal: 0),
+                child: FloatingActionButton(
+                    onPressed: () async {
+                      final result = await showDialog<Character>(
+                        context: context,
+                        builder: (context) {
+                          return const NewCharDialog();
+                        },
+                      );
+                      if (result != null) {
+                        onResult(result);
+                      }
+                    },
+                    child: const Icon(Icons.group_add)),
+              );
+            });
+          }
+        });
   }
 
   Widget createInitiativeTrackerBody(context, constraints) {
@@ -140,6 +174,10 @@ class _HomePageState extends State<HomePage>
                 const DiceRoller(),
               ],
             ),
+            floatingActionButton: _createFAB(onResult: (result) {
+              appState.addCharacter(
+                  result.name, result.initiativeBonus, result.initiativeScore);
+            }),
           );
         }),
       );

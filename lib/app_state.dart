@@ -24,7 +24,6 @@ class Campaign {
   bool showDisabledChar = false;
   bool inCombat;
   int currentTurn;
-  GlobalKey? animatedRollHistoryListKey;
 
   Campaign(
       {required this.title,
@@ -38,7 +37,6 @@ class Campaign {
 }
 
 class AppState extends ChangeNotifier {
-  //var page = Page.initiativeTracker;
   final List<Campaign> _campaigns = [
     Campaign(
         characters: getCharacters(),
@@ -63,19 +61,20 @@ class AppState extends ChangeNotifier {
   int get currentTurn => _c.currentTurn;
   bool get inCombat => _c.inCombat;
   bool get showDisabledChar => _c.showDisabledChar;
-  //final Color defaultColor = const Color.fromARGB(255, 13, 0, 133);
 
   ScrollController scrollController = ScrollController();
-  GlobalKey? get animatedRollHistoryListKey => _c.animatedRollHistoryListKey;
-  set animatedRollHistoryListKey(GlobalKey? key) {
-    _c.animatedRollHistoryListKey = key;
-  }
+  GlobalKey? animatedRollHistoryListKey;
 
   List<Campaign> get campaigns => _campaigns;
 
   void changeCampaign(int newCampaignIndex) {
     _campaignIndex = newCampaignIndex;
     scrollController = ScrollController();
+    var animatedList =
+        animatedRollHistoryListKey?.currentState as AnimatedListState?;
+    animatedList?.removeAllItems((context, animation) => Container());
+    animatedList?.insertAllItems(
+        0, _campaigns[newCampaignIndex].rollHistory.length);
     notifyListeners();
   }
 

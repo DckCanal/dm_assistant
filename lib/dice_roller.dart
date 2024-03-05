@@ -338,7 +338,6 @@ class _RollHistoryState extends State<RollHistory> {
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
     var rolls = appState.rollHistory;
-    print(rolls);
     appState.animatedRollHistoryListKey = _key;
     return AnimatedList(
       key: _key,

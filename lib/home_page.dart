@@ -5,7 +5,6 @@ import 'package:dm_assistant/initiative_tracker.dart';
 import 'package:dm_assistant/initiative_tracker_navigator.dart';
 import 'package:dm_assistant/new_char_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
 
 const maxWidth = 1000;
@@ -47,11 +46,7 @@ class _HomePageState extends State<HomePage>
         builder: (context, currentTabIndex, child) {
           return Drawer(
               backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-              child: currentTabIndex == 0
-                  ? const InitiativeTrackerNavigator(onDrawer: true)
-                  : const SavedRollList(
-                      onDrawer: true,
-                    ));
+              child: const InitiativeTrackerNavigator(onDrawer: true));
         },
       );
     }
@@ -119,7 +114,6 @@ class _HomePageState extends State<HomePage>
         child: LayoutBuilder(builder: (context, constraints) {
           return Scaffold(
             appBar: AppBar(
-              ///elevation: 0,
               backgroundColor: Colors.black,
               title: TextButton(
                   onPressed: () async {
@@ -135,27 +129,6 @@ class _HomePageState extends State<HomePage>
                     }
                   },
                   child: Text(appState.campaignTitle)),
-              actions: <Widget>[
-                IconButton(
-                  icon: const Icon(Icons.color_lens),
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('Scegli un colore'),
-                          content: SingleChildScrollView(
-                            child: BlockPicker(
-                              pickerColor: appState.userColor,
-                              onColorChanged: appState.changeColor,
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ],
               bottom: TabBar(
                 dividerColor: Theme.of(context).colorScheme.onPrimary,
                 dividerHeight: 2,
@@ -186,7 +159,6 @@ class _HomePageState extends State<HomePage>
 }
 
 class CampaignTitleDialog extends StatefulWidget {
-  //final String oldTitle;
   final List<Campaign> campaigns;
 
   const CampaignTitleDialog({required this.campaigns, super.key});
@@ -195,17 +167,6 @@ class CampaignTitleDialog extends StatefulWidget {
 }
 
 class _CampaignTitleDialogState extends State<CampaignTitleDialog> {
-  //String? newTitle;
-  //FocusNode focusNode = FocusNode();
-
-  @override
-  void initState() {
-    super.initState();
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   FocusScope.of(context).requestFocus(focusNode);
-    // });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -227,37 +188,9 @@ class _CampaignTitleDialogState extends State<CampaignTitleDialog> {
                 onPressed: () =>
                     {Navigator.of(context).pop(widget.campaigns.indexOf(c))},
               ),
-            // widget.campaigns.map(c => {
-            //   return TextButton();
-            // }).toList();
-            // TextField(
-            //   onChanged: (value) {
-            //     newTitle = value != '' ? value : widget.oldTitle;
-            //   },
-            //   onSubmitted: (value) {
-            //     Navigator.of(context).pop(newTitle);
-            //   },
-            //   //focusNode: focusNode,
-            //   textInputAction: TextInputAction.done,
-            // ),
-            // const SizedBox(height: 50),
-            // RectButton(
-            //   primary: true,
-            //   width: 125,
-            //   onPressed: () {
-            //     Navigator.of(context).pop(newTitle);
-            //   },
-            //   child: const Text('OK'),
-            // ),
           ],
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    //focusNode.dispose();
-    super.dispose();
   }
 }

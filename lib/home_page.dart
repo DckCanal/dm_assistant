@@ -38,18 +38,18 @@ class _HomePageState extends State<HomePage>
   }
 
   Widget? _createDrawer(context, constraints) {
-    if (constraints.maxWidth >= maxWidth) {
-      return null;
-    } else {
-      return ValueListenableBuilder<int>(
-        valueListenable: _currentTabIndexNotifier,
-        builder: (context, currentTabIndex, child) {
-          return Drawer(
-              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-              child: const InitiativeTrackerNavigator(onDrawer: true));
-        },
-      );
-    }
+    //if (constraints.maxWidth >= maxWidth) {
+    //  return null;
+    //} else {
+    return ValueListenableBuilder<int>(
+      valueListenable: _currentTabIndexNotifier,
+      builder: (context, currentTabIndex, child) {
+        return Drawer(
+            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+            child: const InitiativeTrackerNavigator(onDrawer: true));
+      },
+    );
+    //}
   }
 
   Widget? _createFAB({onResult}) {
@@ -86,22 +86,23 @@ class _HomePageState extends State<HomePage>
   }
 
   Widget createInitiativeTrackerBody(context, constraints) {
-    return constraints.maxWidth < maxWidth
-        ? const InitiativeTracker()
-        : Row(
-            children: [
-              Container(
-                  width: 300,
-                  decoration: BoxDecoration(
-                      color: Colors.black,
-                      border: Border(
-                          right: BorderSide(
-                              width: 1,
-                              color: Theme.of(context).colorScheme.onPrimary))),
-                  child: const InitiativeTrackerNavigator(onDrawer: false)),
-              const Expanded(child: InitiativeTracker()),
-            ],
-          );
+    // return constraints.maxWidth < maxWidth
+    //     ? const InitiativeTracker()
+    //     : Row(
+    //         children: [
+    //           Container(
+    //               width: 300,
+    //               decoration: BoxDecoration(
+    //                   color: Colors.black,
+    //                   border: Border(
+    //                       right: BorderSide(
+    //                           width: 1,
+    //                           color: Theme.of(context).colorScheme.onPrimary))),
+    //               child: const InitiativeTrackerNavigator(onDrawer: false)),
+    //           const Expanded(child: InitiativeTracker()),
+    //         ],
+    //       );
+    return const InitiativeTracker();
   }
 
   @override

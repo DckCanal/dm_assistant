@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:dm_assistant/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -15,6 +17,14 @@ class InitiativeTrackerNavigator extends StatelessWidget {
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
     return ListView(children: [
+      ListTile(
+        title: Text("Dungeon Master Assistant",
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge
+                ?.copyWith(fontWeight: FontWeight.bold)),
+      ),
+      Divider(color: Theme.of(context).colorScheme.onPrimaryContainer),
       ListTile(
         title: const Text("Personaggi non attivi"),
         trailing: Switch(

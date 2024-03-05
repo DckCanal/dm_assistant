@@ -420,7 +420,7 @@ class SavedRollList extends StatelessWidget {
     final appState = context.watch<AppState>();
     var savedRolls = appState.savedRolls;
     return Container(
-      width: 300,
+      width: 200,
       decoration: BoxDecoration(
         //color: Colors.black,
         border: Border(

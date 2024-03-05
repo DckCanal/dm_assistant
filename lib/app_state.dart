@@ -64,17 +64,24 @@ class AppState extends ChangeNotifier {
 
   ScrollController scrollController = ScrollController();
   GlobalKey? animatedRollHistoryListKey;
+  GlobalKey? animatedSavedRollListKey;
 
   List<Campaign> get campaigns => _campaigns;
 
   void changeCampaign(int newCampaignIndex) {
     _campaignIndex = newCampaignIndex;
     scrollController = ScrollController();
-    var animatedList =
+    var animatedRollHistoryList =
         animatedRollHistoryListKey?.currentState as AnimatedListState?;
-    animatedList?.removeAllItems((context, animation) => Container());
-    animatedList?.insertAllItems(
+    animatedRollHistoryList
+        ?.removeAllItems((context, animation) => Container());
+    animatedRollHistoryList?.insertAllItems(
         0, _campaigns[newCampaignIndex].rollHistory.length);
+    var animatedSavedRollList =
+        animatedSavedRollListKey?.currentState as AnimatedListState?;
+    animatedSavedRollList?.removeAllItems((context, animation) => Container());
+    animatedSavedRollList?.insertAllItems(
+        0, _campaigns[newCampaignIndex].savedRolls.length);
     notifyListeners();
   }
 
@@ -91,13 +98,27 @@ class AppState extends ChangeNotifier {
   void addSavedRoll(RollFormula rollFormula, String title) {
     if (!savedRolls.contains((rollFormula, title))) {
       savedRolls.add((rollFormula, title));
+      var animatedList =
+          animatedSavedRollListKey?.currentState as AnimatedListState?;
+      animatedList?.insertItem(0);
       notifyListeners();
     }
   }
 
   void removeSavedRoll(RollFormula rollFormula, String title) {
     if (savedRolls.contains((rollFormula, title))) {
+      int index = savedRolls.indexOf((rollFormula, title));
       savedRolls.remove((rollFormula, title));
+      var animatedList =
+          animatedSavedRollListKey?.currentState as AnimatedListState?;
+      animatedList?.removeItem(
+          index,
+          (context, animation) => SizeTransition(
+                sizeFactor: animation,
+                child: SavedRollTile(
+                  savedRoll: (rollFormula, title),
+                ),
+              ));
       notifyListeners();
     }
   }
@@ -240,7 +261,9 @@ class AppState extends ChangeNotifier {
       // Rimuovi il tiro di dado più vecchio
       RollHistoryEntry removedItem = rollHistory.removeAt(100);
       animatedList?.removeItem(
-          99, (context, animation) => RollTile(roll: removedItem));
+          99,
+          (context, animation) => SizeTransition(
+              sizeFactor: animation, child: RollTile(roll: removedItem)));
     }
     animatedList?.insertItem(0);
     notifyListeners();

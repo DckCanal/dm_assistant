@@ -10,13 +10,17 @@ class DiceRoller extends StatelessWidget {
   const DiceRoller({super.key});
 
   Widget mainPanel(context, constraints) {
-    if (constraints.maxWidth < 602) {
-      return const RollHistory();
-    } else {
-      return const Row(
-        children: [SavedRollList(), Expanded(child: RollHistory())],
-      );
-    }
+    // if (constraints.maxWidth < 602) {
+    //   return const RollHistory();
+    // } else {
+    //   return const Row(
+    //     children: [
+    //       SizedBox(width: 200, child: SavedRollList()),
+    //       Expanded(child: RollHistory())
+    //     ],
+    //   );
+    // }
+    return const RollHistory();
   }
 
   @override
@@ -27,20 +31,24 @@ class DiceRoller extends StatelessWidget {
         child: Column(children: [
           Expanded(child: mainPanel(context, constraints)),
           const DicePanel(),
-          const CustomRollPanel(),
         ]),
       );
     });
   }
 }
 
-class DicePanel extends StatelessWidget {
+class DicePanel extends StatefulWidget {
   const DicePanel({
     super.key,
   });
 
-  final buttonWidth = 60.0;
+  @override
+  State<DicePanel> createState() => _DicePanelState();
+}
 
+class _DicePanelState extends State<DicePanel> {
+  final buttonWidth = 60.0;
+  bool _savedRollViewEnabled = false;
   Widget _d20(addRoll) {
     return RectButton(
       primary: false,
@@ -127,6 +135,16 @@ class DicePanel extends StatelessWidget {
     }
 
     List<Widget> diceList = [
+      RectButton(
+        primary: false,
+        width: buttonWidth,
+        child: const Icon(Icons.other_houses),
+        onPressed: () {
+          setState(() {
+            _savedRollViewEnabled = !_savedRollViewEnabled;
+          });
+        },
+      ),
       _d20(addRoll),
       _d100(addRoll),
       _d12(addRoll),
@@ -136,43 +154,81 @@ class DicePanel extends StatelessWidget {
       _d4(addRoll),
     ];
 
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-          color: Colors.black,
-          border: Border(
-              top: BorderSide(
-                  width: 2, color: Theme.of(context).colorScheme.onPrimary))),
-      child: LayoutBuilder(builder: (context, constraints) {
-        if (constraints.maxWidth > 450) {
-          return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: diceList);
-        } else if (Platform.isAndroid) {
-          return SizedBox(
-            height: 46,
-            child:
-                ListView(scrollDirection: Axis.horizontal, children: diceList),
-          );
-        } else {
-          return SizedBox(
-              height: 110,
-              child: Column(children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: diceList.sublist(0, 4),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: diceList.sublist(4, 7),
-                )
-              ]));
-        }
-      }),
-    );
+    Widget bottomPanel() {
+      if (_savedRollViewEnabled == true) {
+        return Column(
+          children: [
+            ListTile(
+              title: const Text("Tiri salvati"),
+              trailing: IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () {
+                    setState(() {
+                      _savedRollViewEnabled = !_savedRollViewEnabled;
+                    });
+                  }),
+            ),
+            const Expanded(child: SavedRollList()),
+          ],
+        );
+      } else {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            LayoutBuilder(builder: (context, constraints) {
+              if (constraints.maxWidth > 480) {
+                return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: diceList);
+              } else if (Platform.isAndroid || Platform.isIOS) {
+                return SizedBox(
+                  height: 46,
+                  child: ListView(
+                      scrollDirection: Axis.horizontal, children: diceList),
+                );
+              } else {
+                return SizedBox(
+                    height: 110,
+                    child: Column(children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: diceList.sublist(0, 4),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: diceList.sublist(4, 8),
+                      )
+                    ]));
+              }
+            }),
+            const CustomRollPanel(),
+          ],
+        );
+      }
+    }
+
+    return LayoutBuilder(builder: (context, constraints) {
+      return AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          height: _savedRollViewEnabled
+              ? 300
+              : (Platform.isAndroid ||
+                      Platform.isIOS ||
+                      constraints.maxWidth > 510
+                  ? 160
+                  : 220),
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+              color: Colors.black,
+              border: Border(
+                  top: BorderSide(
+                      width: 2,
+                      color: Theme.of(context).colorScheme.onPrimary))),
+          child: bottomPanel());
+    });
   }
 }
 
@@ -407,64 +463,95 @@ class RollTile extends StatelessWidget {
   }
 }
 
-class SavedRollList extends StatelessWidget {
+class SavedRollList extends StatefulWidget {
   const SavedRollList({
-    this.onDrawer = false,
+    //this.onDrawer = false,
     super.key,
   });
 
-  final bool onDrawer;
+  //final bool onDrawer;
+
+  @override
+  State<SavedRollList> createState() => _SavedRollListState();
+}
+
+class _SavedRollListState extends State<SavedRollList> {
+  final _key = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     final appState = context.watch<AppState>();
     var savedRolls = appState.savedRolls;
-    return Container(
-      width: 200,
-      decoration: BoxDecoration(
-        //color: Colors.black,
-        border: Border(
-          right: BorderSide(
-              width: 1, color: Theme.of(context).colorScheme.onPrimary),
+    appState.animatedSavedRollListKey = _key;
+    return Material(
+      color: Colors.black,
+      child: Container(
+        //width: 200,
+        decoration: BoxDecoration(
+          //color: Colors.black,
+          border: Border(
+            right: BorderSide(
+                width: 1, color: Theme.of(context).colorScheme.onPrimary),
+          ),
+        ),
+        child: AnimatedList(
+          key: _key,
+          initialItemCount: savedRolls.length,
+          itemBuilder: (context, index, animation) {
+            (RollFormula, String) savedRoll = savedRolls[index];
+            return SizeTransition(
+                sizeFactor: animation,
+                child: SavedRollTile(savedRoll: savedRoll));
+          },
+          // children: savedRolls.map((savedRoll) {
+          //   return;
+          // }).toList(),
         ),
       ),
-      child: ListView(
-        children: savedRolls.map((savedRoll) {
-          return InkWell(
-            overlayColor: MaterialStateColor.resolveWith((states) {
-              if (states.contains(MaterialState.hovered)) {
-                return Theme.of(context)
-                    .colorScheme
-                    .inversePrimary
-                    .withOpacity(0.7);
-              }
-              return Colors.transparent;
-            }),
-            onTap: () {
-              if (onDrawer) {
-                Navigator.pop(context);
-              }
-              appState.addRollHistoryEntry(RollHistoryEntry(
-                  roll: savedRoll.$1.roll(), title: savedRoll.$2));
-            },
-            child: ListTile(
-              title: Text(
-                savedRoll.$2,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge
-                    ?.copyWith(color: Theme.of(context).colorScheme.primary),
-              ),
-              subtitle: Text(savedRoll.$1.toString()),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () {
-                  appState.removeSavedRoll(savedRoll.$1, savedRoll.$2);
-                },
-              ),
-            ),
-          );
-        }).toList(),
+    );
+  }
+}
+
+class SavedRollTile extends StatelessWidget {
+  const SavedRollTile({
+    super.key,
+    required this.savedRoll,
+  });
+
+  final (RollFormula, String) savedRoll;
+
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<AppState>();
+    return InkWell(
+      overlayColor: MaterialStateColor.resolveWith((states) {
+        if (states.contains(MaterialState.hovered)) {
+          return Theme.of(context).colorScheme.inversePrimary.withOpacity(0.7);
+        }
+        return Colors.transparent;
+      }),
+      onTap: () {
+        // if (widget.onDrawer) {
+        //   Navigator.pop(context);
+        // }
+        appState.addRollHistoryEntry(
+            RollHistoryEntry(roll: savedRoll.$1.roll(), title: savedRoll.$2));
+      },
+      child: ListTile(
+        title: Text(
+          savedRoll.$2,
+          style: Theme.of(context)
+              .textTheme
+              .bodyLarge
+              ?.copyWith(color: Theme.of(context).colorScheme.primary),
+        ),
+        subtitle: Text(savedRoll.$1.toString()),
+        trailing: IconButton(
+          icon: const Icon(Icons.delete),
+          onPressed: () {
+            appState.removeSavedRoll(savedRoll.$1, savedRoll.$2);
+          },
+        ),
       ),
     );
   }

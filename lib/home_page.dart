@@ -1,4 +1,5 @@
 import 'package:dm_assistant/app_state.dart';
+import 'package:dm_assistant/campaign.dart';
 import 'package:dm_assistant/character.dart';
 import 'package:dm_assistant/dice_roller.dart';
 import 'package:dm_assistant/initiative_tracker.dart';

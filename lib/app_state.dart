@@ -1,38 +1,10 @@
-// import 'dart:js_util';
-
+import 'package:dm_assistant/campaign.dart';
 import 'package:dm_assistant/dice_roller.dart';
 import 'package:flutter/material.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'character.dart';
 import 'dice.dart';
 import 'data.dart';
-
-//enum Page { initiativeTracker, diceRoller }
-
-class Campaign {
-  // Game data
-  List<Character> characters;
-  // List<(RollFormula roll, String title)> savedRolls;
-  List<SavedRoll> savedRolls;
-  List<RollHistoryEntry> rollHistory;
-  String title;
-
-  // Settings
-  Color color;
-  bool showDisabledChar = false;
-  bool inCombat;
-  int currentTurn;
-
-  Campaign(
-      {required this.title,
-      required this.characters,
-      required this.savedRolls,
-      required this.rollHistory,
-      this.color = const Color.fromARGB(255, 13, 0, 133),
-      this.showDisabledChar = false,
-      this.inCombat = false,
-      this.currentTurn = 0});
-}
 
 class AppState extends ChangeNotifier {
   final List<Campaign> _campaigns = [

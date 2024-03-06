@@ -28,21 +28,21 @@ List<Character> getCharacters2() {
   ];
 }
 
-List<(RollFormula roll, String title)> getSavedRolls() {
+List<SavedRoll> getSavedRolls() {
   return [
-    (RollFormula.fromString("2d6+3d4+1"), "Attacco Ghoul"),
-    (RollFormula.fromString("d20+7"), "Tiro per colpire Vampiro"),
-    (RollFormula.fromString("1d20+5"), "TS DES ladro"),
-    (RollFormula.fromString("3d4+3"), "Dardo incantato")
+    SavedRoll(RollFormula.fromString("2d6+3d4+1"), "Attacco Ghoul"),
+    SavedRoll(RollFormula.fromString("d20+7"), "Tiro per colpire Vampiro"),
+    SavedRoll(RollFormula.fromString("1d20+5"), "TS DES ladro"),
+    SavedRoll(RollFormula.fromString("3d4+3"), "Dardo incantato")
   ];
 }
 
-List<(RollFormula roll, String title)> getSavedRolls2() {
+List<SavedRoll> getSavedRolls2() {
   return [
-    (RollFormula.fromString("2d6+3d4+1"), "Attacco Lucifer"),
-    (RollFormula.fromString("d20+2"), "Tiro per colpire Beholder"),
-    (RollFormula.fromString("1d20+3"), "TS DES raggio Beholder"),
-    (RollFormula.fromString("2d100+20"), "Danno Tarrasque")
+    SavedRoll(RollFormula.fromString("2d6+3d4+1"), "Attacco Lucifer"),
+    SavedRoll(RollFormula.fromString("d20+2"), "Tiro per colpire Beholder"),
+    SavedRoll(RollFormula.fromString("1d20+3"), "TS DES raggio Beholder"),
+    SavedRoll(RollFormula.fromString("2d100+20"), "Danno Tarrasque")
   ];
 }
 

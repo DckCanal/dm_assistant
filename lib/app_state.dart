@@ -12,7 +12,8 @@ import 'data.dart';
 class Campaign {
   // Game data
   List<Character> characters;
-  List<(RollFormula roll, String title)> savedRolls;
+  // List<(RollFormula roll, String title)> savedRolls;
+  List<SavedRoll> savedRolls;
   List<RollHistoryEntry> rollHistory;
   String title;
 
@@ -50,7 +51,8 @@ class AppState extends ChangeNotifier {
   Campaign get _c => _campaigns[_campaignIndex];
 
   List<Character> get characters => _c.characters;
-  List<(RollFormula roll, String title)> get savedRolls => _c.savedRolls;
+  //List<(RollFormula roll, String title)> get savedRolls => _c.savedRolls;
+  List<SavedRoll> get savedRolls => _c.savedRolls;
   List<RollHistoryEntry> get rollHistory => _c.rollHistory;
   String get campaignTitle => _c.title;
   Color get userColor => _c.color;
@@ -92,9 +94,9 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addSavedRoll(RollFormula rollFormula, String title) {
-    if (!savedRolls.contains((rollFormula, title))) {
-      savedRolls.add((rollFormula, title));
+  void addSavedRoll(SavedRoll newSavedRoll) {
+    if (!savedRolls.contains(newSavedRoll)) {
+      savedRolls.add(newSavedRoll);
       var animatedList =
           animatedSavedRollListKey?.currentState as AnimatedListState?;
       animatedList?.insertItem(0);
@@ -102,10 +104,10 @@ class AppState extends ChangeNotifier {
     }
   }
 
-  void removeSavedRoll(RollFormula rollFormula, String title) {
-    if (savedRolls.contains((rollFormula, title))) {
-      int index = savedRolls.indexOf((rollFormula, title));
-      savedRolls.remove((rollFormula, title));
+  void removeSavedRoll(SavedRoll savedRoll) {
+    if (savedRolls.contains(savedRoll)) {
+      int index = savedRolls.indexOf(savedRoll);
+      savedRolls.remove(savedRoll);
       var animatedList =
           animatedSavedRollListKey?.currentState as AnimatedListState?;
       animatedList?.removeItem(
@@ -113,7 +115,7 @@ class AppState extends ChangeNotifier {
           (context, animation) => SizeTransition(
                 sizeFactor: animation,
                 child: SavedRollTile(
-                  savedRoll: (rollFormula, title),
+                  savedRoll: savedRoll,
                 ),
               ));
       notifyListeners();

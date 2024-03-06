@@ -264,3 +264,10 @@ class DiceParseException implements Exception {
     return "DiceParseException: $message";
   }
 }
+
+class SavedRoll {
+  RollFormula rollFormula;
+  String title;
+
+  SavedRoll(this.rollFormula, this.title);
+}

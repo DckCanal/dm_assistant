@@ -16,7 +16,7 @@ class DiceRoller extends StatelessWidget {
         color: Colors.black,
         child: Column(children: [
           Expanded(child: RollHistory()),
-           DicePanel(),
+          DicePanel(),
         ]),
       );
     });
@@ -271,8 +271,8 @@ class _CustomRollPanelState extends State<CustomRollPanel> {
                             return const NewRollDialog();
                           });
                       if (result != null) {
-                        appState.addSavedRoll(
-                            RollFormula.fromString(rollString), result);
+                        appState.addSavedRoll(SavedRoll(
+                            RollFormula.fromString(rollString), result));
                       }
                     }
                   : null,
@@ -475,7 +475,7 @@ class _SavedRollListState extends State<SavedRollList> {
           key: _key,
           initialItemCount: savedRolls.length,
           itemBuilder: (context, index, animation) {
-            (RollFormula, String) savedRoll = savedRolls[index];
+            SavedRoll savedRoll = savedRolls[index];
             return SizeTransition(
                 sizeFactor: animation,
                 child: SavedRollTile(savedRoll: savedRoll));
@@ -492,7 +492,7 @@ class SavedRollTile extends StatelessWidget {
     required this.savedRoll,
   });
 
-  final (RollFormula, String) savedRoll;
+  final SavedRoll savedRoll;
 
   @override
   Widget build(BuildContext context) {
@@ -505,22 +505,22 @@ class SavedRollTile extends StatelessWidget {
         return Colors.transparent;
       }),
       onTap: () {
-        appState.addRollHistoryEntry(
-            RollHistoryEntry(roll: savedRoll.$1.roll(), title: savedRoll.$2));
+        appState.addRollHistoryEntry(RollHistoryEntry(
+            roll: savedRoll.rollFormula.roll(), title: savedRoll.title));
       },
       child: ListTile(
         title: Text(
-          savedRoll.$2,
+          savedRoll.title,
           style: Theme.of(context)
               .textTheme
               .bodyLarge
               ?.copyWith(color: Theme.of(context).colorScheme.primary),
         ),
-        subtitle: Text(savedRoll.$1.toString()),
+        subtitle: Text(savedRoll.rollFormula.toString()),
         trailing: IconButton(
           icon: const Icon(Icons.delete),
           onPressed: () {
-            appState.removeSavedRoll(savedRoll.$1, savedRoll.$2);
+            appState.removeSavedRoll(savedRoll);
           },
         ),
       ),

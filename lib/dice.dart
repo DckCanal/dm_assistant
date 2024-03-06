@@ -70,14 +70,6 @@ class Roll {
   int get value =>
       diceRolls.fold(0, (sum, roll) => sum + roll.value) + modifier;
 
-  // String get rollFormula {
-  //   String formula = diceRolls.map((r) => r.formula).join(' + ');
-  //   if (modifier != 0) {
-  //     return '$formula + $modifier';
-  //   }
-  //   return formula;
-  // }
-
   String get rollFormula {
     // Raggruppa i dadi dello stesso tipo nella formula
     Map<Dice, int> diceCounts = {};
@@ -187,13 +179,6 @@ class RollFormula {
 
     return formula;
   }
-
-  // static bool isValid(String formula) {
-  //   RegExp validFormulaRegExp =
-  //       RegExp(r'^(\d*d\d+\s*\+\s*)*\d*d\d+(\s*[\+\-]\s*\d+)?$');
-
-  //   return validFormulaRegExp.hasMatch(formula);
-  // }
 
   static String compactFormula(String formula) {
     // Split della formula in base al carattere '+'

@@ -9,28 +9,14 @@ import 'package:provider/provider.dart';
 class DiceRoller extends StatelessWidget {
   const DiceRoller({super.key});
 
-  Widget mainPanel(context, constraints) {
-    // if (constraints.maxWidth < 602) {
-    //   return const RollHistory();
-    // } else {
-    //   return const Row(
-    //     children: [
-    //       SizedBox(width: 200, child: SavedRollList()),
-    //       Expanded(child: RollHistory())
-    //     ],
-    //   );
-    // }
-    return const RollHistory();
-  }
-
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      return Material(
+      return const Material(
         color: Colors.black,
         child: Column(children: [
-          Expanded(child: mainPanel(context, constraints)),
-          const DicePanel(),
+          Expanded(child: RollHistory()),
+           DicePanel(),
         ]),
       );
     });
@@ -244,7 +230,6 @@ class CustomRollPanel extends StatefulWidget {
 class _CustomRollPanelState extends State<CustomRollPanel> {
   String rollString = '';
   bool isValid() {
-    //return RollFormula.isValid(rollString);
     try {
       RollFormula.fromString(rollString);
       return true;
@@ -398,7 +383,6 @@ class _RollHistoryState extends State<RollHistory> {
     return AnimatedList(
       key: _key,
       reverse: false,
-      //shrinkWrap: true,
       initialItemCount: rolls.length,
       itemBuilder: (context, index, animation) {
         RollHistoryEntry roll = rolls[index];
@@ -426,13 +410,11 @@ class RollTile extends StatelessWidget {
           .textTheme
           .titleLarge
           ?.copyWith(color: Theme.of(context).colorScheme.primary),
-      //style: const TextStyle(fontSize: 28),
     );
     Widget title = Text(roll.title ?? roll.roll.rollFormula,
         style: Theme.of(context).textTheme.bodyMedium);
     return SizedBox(
       height: 60,
-      //width: 600,
       child: InkWell(
         onTap: () {
           appState.addRollHistoryEntry(RollHistoryEntry(
@@ -465,11 +447,8 @@ class RollTile extends StatelessWidget {
 
 class SavedRollList extends StatefulWidget {
   const SavedRollList({
-    //this.onDrawer = false,
     super.key,
   });
-
-  //final bool onDrawer;
 
   @override
   State<SavedRollList> createState() => _SavedRollListState();
@@ -486,9 +465,7 @@ class _SavedRollListState extends State<SavedRollList> {
     return Material(
       color: Colors.black,
       child: Container(
-        //width: 200,
         decoration: BoxDecoration(
-          //color: Colors.black,
           border: Border(
             right: BorderSide(
                 width: 1, color: Theme.of(context).colorScheme.onPrimary),
@@ -503,9 +480,6 @@ class _SavedRollListState extends State<SavedRollList> {
                 sizeFactor: animation,
                 child: SavedRollTile(savedRoll: savedRoll));
           },
-          // children: savedRolls.map((savedRoll) {
-          //   return;
-          // }).toList(),
         ),
       ),
     );
@@ -531,9 +505,6 @@ class SavedRollTile extends StatelessWidget {
         return Colors.transparent;
       }),
       onTap: () {
-        // if (widget.onDrawer) {
-        //   Navigator.pop(context);
-        // }
         appState.addRollHistoryEntry(
             RollHistoryEntry(roll: savedRoll.$1.roll(), title: savedRoll.$2));
       },

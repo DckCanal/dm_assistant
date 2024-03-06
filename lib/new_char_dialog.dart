@@ -13,14 +13,13 @@ class NewCharDialog extends Dialog {
       child: Container(
         width: 500,
         decoration: BoxDecoration(
-          color: Colors.black, //Theme.of(context).colorScheme.surface,
+          color: Colors.black, 
           border: Border.all(
               color: Theme.of(context).colorScheme.inversePrimary, width: 2),
           borderRadius: BorderRadius.circular(10),
         ),
         padding: const EdgeInsets.all(20.0),
         child: ListView(
-          //mainAxisSize: MainAxisSize.min,
           children: [
             const Text('Nuovo personaggio',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),

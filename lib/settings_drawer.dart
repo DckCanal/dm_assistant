@@ -1,12 +1,10 @@
-import 'dart:ui';
-
 import 'package:dm_assistant/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
 
-class InitiativeTrackerNavigator extends StatelessWidget {
-  const InitiativeTrackerNavigator({
+class SettingsDrawer extends StatelessWidget {
+  const SettingsDrawer({
     required this.onDrawer,
     super.key,
   });

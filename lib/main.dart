@@ -11,7 +11,6 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    //Wakelock.enable();
     return ChangeNotifierProvider(
       create: (context) => AppState(),
       child: const MainComponent(),

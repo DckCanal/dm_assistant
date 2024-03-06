@@ -51,20 +51,10 @@ class CharTile extends StatelessWidget {
           ),
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(children: [
-            // OutlinedButton(
-            //   style: ButtonStyle(
-            //       side: MaterialStateProperty.resolveWith<BorderSide?>(
-            //           (states) => BorderSide(
-            //               color: Theme.of(context).colorScheme.inversePrimary)),
-            //       shape: MaterialStateProperty.resolveWith<OutlinedBorder?>(
-            //           (states) => const CircleBorder())),
+            
             RoundButton(
-              //InkWell(
               primary: false,
               onPressed: () async {
-                //customBorder: CircleBorder(),
-
-                // onTap: () async {
                 final result = await showDialog<int>(
                   context: context,
                   builder: (context) {
@@ -76,16 +66,10 @@ class CharTile extends StatelessWidget {
                   appState.setCharacterInitiativeScore(character, result);
                 }
               },
-              //child: SizedBox(
-              //height: 58,
-              //width: 58,
-              //child: Center(
               child: Text(
                 character.initiativeScore.toString(),
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
-              //),
-              // ),
             ),
             const SizedBox(width: 20),
             Expanded(
@@ -154,7 +138,7 @@ class _InitiativeDialogState extends State<InitiativeDialog> {
         width: 250,
         height: 200,
         decoration: BoxDecoration(
-          color: Colors.black, // Theme.of(context).colorScheme.surface,
+          color: Colors.black, 
           border: Border.all(
               color: Theme.of(context).colorScheme.inversePrimary, width: 1),
           borderRadius: BorderRadius.circular(10),

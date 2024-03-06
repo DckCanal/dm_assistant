@@ -42,30 +42,6 @@ class InitiativeTrackerControlBar extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // RoundButton(
-              //   primary: false,
-              //   icon: Icon(
-              //     Icons.group_add,
-              //     size: checkConstraint()
-              //         ? secondaryRoundIconBigSize
-              //         : secondaryRoundIconSmallSize,
-              //   ),
-              //   radius: checkConstraint()
-              //       ? secondaryRoundBigRadius
-              //       : secondaryRoundSmallRadius,
-              //   onPressed: () async {
-              //     final result = await showDialog<Character>(
-              //       context: context,
-              //       builder: (context) {
-              //         return const NewCharDialog();
-              //       },
-              //     );
-              //     if (result != null) {
-              //       appState.addCharacter(result.name, result.initiativeBonus,
-              //           result.initiativeScore);
-              //     }
-              //   },
-              // ),
               RectButton(
                 onPressed: appState.sortCharacters,
                 primary: false,

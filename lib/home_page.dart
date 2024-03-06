@@ -2,7 +2,7 @@ import 'package:dm_assistant/app_state.dart';
 import 'package:dm_assistant/character.dart';
 import 'package:dm_assistant/dice_roller.dart';
 import 'package:dm_assistant/initiative_tracker.dart';
-import 'package:dm_assistant/initiative_tracker_navigator.dart';
+import 'package:dm_assistant/settings_drawer.dart';
 import 'package:dm_assistant/new_char_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage>
       builder: (context, currentTabIndex, child) {
         return Drawer(
             backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-            child: const InitiativeTrackerNavigator(onDrawer: true));
+            child: const SettingsDrawer(onDrawer: true));
       },
     );
     //}

@@ -10,21 +10,9 @@ class InitiativeTracker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //var appState = context.watch<AppState>();
     return const Material(
       color: Colors.black,
       child: Column(children: [
-        // const SizedBox(height: 20),
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.center,
-        //   children: [
-        //     const Text('Personaggi non attivi'),
-        //     const SizedBox(width: 20),
-        //     Switch(
-        //         value: appState.showDisabledChar,
-        //         onChanged: appState.setDisabledChar),
-        //   ],
-        // ),
         Expanded(
           child: CharacterList(),
         ),
@@ -46,38 +34,23 @@ class CharacterList extends StatelessWidget {
 
     return LayoutBuilder(builder: (context, constraints) {
       return Container(
-        //padding: const EdgeInsets.symmetric(vertical: 12.0),
         constraints: const BoxConstraints(maxWidth: 800),
         child: ListView.separated(
             key: const PageStorageKey('InitiativeTrackerListView'),
             itemCount: characters.length,
             controller: appState.scrollController,
             separatorBuilder: (BuildContext context, int index) {
-              return //constraints.maxWidth > 600
-                  //? const SizedBox(height: 10) :
-                  Divider(
+              return Divider(
                 color: Theme.of(context).colorScheme.inversePrimary,
                 height: 2,
               );
             },
-// child: AnimatedList(
             itemBuilder: (context, index) {
               return CharTile(
                 character: characters[index],
                 roundOwner: index == appState.currentTurn && appState.inCombat,
               );
-            }
-            // initialItemCount: characters.length,
-            // itemBuilder: (context, index, animation) {
-            //   return FadeTransition(
-            //     opacity: Animation(),
-            //     child: CharTile(
-            //       character: characters[index],
-            //       roundOwner: index == appState.currentTurn && appState.inCombat,
-            //     ),
-            //   );
-            // },
-            ),
+            }),
       );
     });
   }

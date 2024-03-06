@@ -2,7 +2,6 @@
 
 import 'package:dm_assistant/dice_roller.dart';
 import 'package:flutter/material.dart';
-import 'package:isar/isar.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'character.dart';
 import 'dice.dart';
@@ -11,8 +10,6 @@ import 'data.dart';
 //enum Page { initiativeTracker, diceRoller }
 
 class Campaign {
-  Id id = Isar.autoIncrement;
-
   // Game data
   List<Character> characters;
   List<(RollFormula roll, String title)> savedRolls;

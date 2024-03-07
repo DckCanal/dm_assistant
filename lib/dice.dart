@@ -1,10 +1,41 @@
 import 'dart:math';
+import 'package:collection/collection.dart';
+
+Function deepEq = const DeepCollectionEquality().equals;
 
 enum Dice { d100, d20, d12, d10, d8, d6, d4 }
 
 extension DiceExtension on Dice {
   String get representation {
     return toString().split('.').last;
+  }
+}
+
+Dice diceEnumFromString(String diceRepresentation) {
+  switch (diceRepresentation) {
+    case 'd100':
+    case 'D100':
+      return Dice.d100;
+    case 'd20':
+    case 'D20':
+      return Dice.d20;
+    case 'd12':
+    case 'D12':
+      return Dice.d12;
+    case 'd10':
+    case 'D10':
+      return Dice.d10;
+    case 'd8':
+    case 'D8':
+      return Dice.d8;
+    case 'd6':
+    case 'D6':
+      return Dice.d6;
+    case 'd4':
+    case 'D4':
+      return Dice.d4;
+    default:
+      throw DiceParseException("Errore nella formula: $diceRepresentation");
   }
 }
 
@@ -34,6 +65,8 @@ class DiceRoll {
     }
   }
 
+  DiceRoll.withValue(this.dice, this.value);
+
   DiceRoll(this.dice) {
     switch (dice) {
       case Dice.d100:
@@ -61,6 +94,12 @@ class DiceRoll {
         throw Exception('Unknown dice');
     }
   }
+  @override
+  operator ==(other) =>
+      other is DiceRoll && other.dice == dice && other.value == value;
+
+  @override
+  int get hashCode => Object.hash(dice, value);
 }
 
 class Roll {
@@ -69,6 +108,16 @@ class Roll {
 
   int get value =>
       diceRolls.fold(0, (sum, roll) => sum + roll.value) + modifier;
+
+  @override
+  operator ==(other) =>
+      other is Roll &&
+      other.modifier == modifier &&
+      other.value == value &&
+      deepEq(other.diceRolls, diceRolls);
+
+  @override
+  int get hashCode => Object.hash(modifier, diceRolls);
 
   String get rollFormula {
     // Raggruppa i dadi dello stesso tipo nella formula
@@ -92,9 +141,46 @@ class Roll {
 
   @override
   String toString() {
-    return rollFormula;
+    // return rollFormula;
+    String str = '';
+    for (DiceRoll diceRoll in diceRolls) {
+      str += '${diceRoll.formula}(${diceRoll.value})';
+      if (diceRolls.indexOf(diceRoll) != diceRolls.length - 1) {
+        str += '+';
+      }
+    }
+    if (modifier != 0) {
+      str += '+$modifier';
+    }
+    return str;
   }
 
+  factory Roll.fromString(String rollString) {
+    List<String> tokens = rollString.split('+');
+    List<DiceRoll> diceRolls = [];
+    int modifier;
+
+    try {
+      //Detect if last token is the modifier
+      if (!tokens.last.contains('d')) {
+        modifier = int.parse(tokens.last);
+        tokens.removeLast();
+      } else {
+        modifier = 0;
+      }
+      //Parse dice tokens
+      for (String token in tokens) {
+        List<String> parts = token.split('(');
+        Dice dice = diceEnumFromString(parts[0]);
+        int value = int.parse(parts[1].substring(0, parts[1].length - 1));
+        diceRolls.add(DiceRoll.withValue(dice, value));
+      }
+
+      return Roll(diceRolls: diceRolls, modifier: modifier);
+    } catch (e) {
+      throw DiceParseException('Errore nella formula: $rollString');
+    }
+  }
   Roll({required this.diceRolls, this.modifier = 0});
 }
 

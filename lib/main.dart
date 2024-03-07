@@ -1,9 +1,21 @@
+import 'package:dm_assistant/character.dart';
 import 'package:flutter/material.dart';
 import 'app_state.dart';
 import 'home_page.dart';
 import 'package:provider/provider.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'data.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+  var characterBox = await Hive.openBox<Character>('characters');
+  if (characterBox.isEmpty) {
+    List<Character> defaultCharacters = getCharacters2();
+    for (Character c in defaultCharacters) {
+      characterBox.add(c);
+    }
+  }
+  Hive.registerAdapter(CharacterAdapter());
   runApp(const MyApp());
 }
 

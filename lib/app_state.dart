@@ -2,6 +2,7 @@ import 'package:dm_assistant/campaign.dart';
 import 'package:dm_assistant/dice_roller.dart';
 import 'package:flutter/material.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'character.dart';
 import 'dice.dart';
 import 'data.dart';
